@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
+import com.intellij.ui.jcef.JBCefClient;
 import com.intellij.ui.jcef.JBCefJSQuery;
 import com.reader.jetbrains.model.Book;
 import com.reader.jetbrains.parser.BookParser;
@@ -24,8 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
@@ -33,8 +32,9 @@ import org.cef.handler.CefLifeSpanHandlerAdapter;
 public final class BrowserDialog extends DialogWrapper {
     private final Project project;
     private final String initialUrl;
-    private final List<JBCefJSQuery> pendingQueries = new ArrayList<>();
     private JBCefBrowser browser;
+    private JBCefClient client;
+    private JBCefJSQuery pageQuery;
 
     public BrowserDialog(Project project, String url) {
         super(project, false);
@@ -59,7 +59,17 @@ public final class BrowserDialog extends DialogWrapper {
             return panel;
         }
 
-        browser = new JBCefBrowser(initialUrl);
+        client = JBCefApp.getInstance().createClient();
+        browser = JBCefBrowser.createBuilder()
+                .setClient(client)
+                .setUrl(initialUrl)
+                .setCreateImmediately(false)
+                .build();
+        pageQuery = JBCefJSQuery.create(browser);
+        pageQuery.addHandler(payload -> {
+            SwingUtilities.invokeLater(() -> importPayload(payload));
+            return new JBCefJSQuery.Response(null);
+        });
         browser.getJBCefClient().addLifeSpanHandler(new CefLifeSpanHandlerAdapter() {
             @Override
             public boolean onBeforePopup(CefBrowser cefBrowser, CefFrame frame, String targetUrl, String targetFrameName) {
@@ -96,10 +106,14 @@ public final class BrowserDialog extends DialogWrapper {
     @Override
     public void dispose() {
         rememberCurrentUrl();
-        for (JBCefJSQuery query : pendingQueries) {
-            query.dispose();
+        if (pageQuery != null) {
+            pageQuery.dispose();
+            pageQuery = null;
         }
-        pendingQueries.clear();
+        if (client != null) {
+            client.dispose();
+            client = null;
+        }
         super.dispose();
     }
 
@@ -109,24 +123,13 @@ public final class BrowserDialog extends DialogWrapper {
             return;
         }
 
-        JBCefJSQuery query = JBCefJSQuery.create(browser);
-        pendingQueries.add(query);
-        query.addHandler(payload -> {
-            SwingUtilities.invokeLater(() -> {
-                pendingQueries.remove(query);
-                query.dispose();
-                importPayload(payload);
-            });
-            return new JBCefJSQuery.Response(null);
-        });
-
         String expression = """
                 encodeURIComponent(location.href) + '\\n' +
                 encodeURIComponent(document.title || '') + '\\n' +
                 encodeURIComponent(document.documentElement.outerHTML || '')
                 """;
         browser.getCefBrowser().executeJavaScript(
-                query.inject(expression),
+                pageQuery.inject(expression),
                 browser.getCefBrowser().getURL(),
                 0
         );
