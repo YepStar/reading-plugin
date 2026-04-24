@@ -13,6 +13,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.reader.jetbrains.state.ReaderStateService"/>
+        <toolWindow id="Reader"
+                    anchor="right"
+                    icon="AllIcons.General.Balloon"
+                    factoryClass="com.reader.jetbrains.ui.ReaderToolWindowFactory"/>
     </extensions>
 
     <actions>
