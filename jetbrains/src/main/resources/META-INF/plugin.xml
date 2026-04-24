@@ -1,0 +1,114 @@
+<idea-plugin>
+    <id>com.reader.jetbrains</id>
+    <name>Reader</name>
+    <version>0.1.0</version>
+    <vendor>Reader</vendor>
+    <idea-version since-build="242"/>
+
+    <description><![CDATA[
+        <p>Native editor reader for local TXT/EPUB files and cleaned web novel pages.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="com.reader.jetbrains.state.ReaderStateService"/>
+    </extensions>
+
+    <actions>
+        <group id="reader.group.Main" text="Reader" popup="true" icon="AllIcons.General.Balloon">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </group>
+
+        <action id="reader.OpenLocalBook"
+                class="com.reader.jetbrains.actions.OpenLocalBookAction"
+                text="Open Local Book"
+                description="Open a TXT or EPUB book and split chapters"
+                icon="AllIcons.Nodes.Folder">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift O"/>
+        </action>
+
+        <action id="reader.ShowNativeReader"
+                class="com.reader.jetbrains.actions.ShowNativeReaderAction"
+                text="Show Native Reader"
+                description="Show the current chapter in a native editor hint"
+                icon="AllIcons.General.Balloon">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift R"/>
+        </action>
+
+        <action id="reader.HideNativeReader"
+                class="com.reader.jetbrains.actions.HideNativeReaderAction"
+                text="Hide Native Reader"
+                description="Hide the native reader hint"
+                icon="AllIcons.Actions.Close">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift H"/>
+        </action>
+
+        <action id="reader.OpenToc"
+                class="com.reader.jetbrains.actions.OpenTocAction"
+                text="Open Table of Contents"
+                description="Open chapter list and jump to a chapter"
+                icon="AllIcons.General.InlineVariablesHover">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift T"/>
+        </action>
+
+        <action id="reader.NextChapter"
+                class="com.reader.jetbrains.actions.NextChapterAction"
+                text="Next Chapter"
+                description="Move to the next chapter"
+                icon="AllIcons.Actions.Play_last">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift N"/>
+        </action>
+
+        <action id="reader.ToggleAutoNextChapter"
+                class="com.reader.jetbrains.actions.ToggleAutoNextChapterAction"
+                text="Toggle Auto Next Chapter"
+                description="Start or stop automatic chapter switching"
+                icon="AllIcons.Actions.Execute">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift A"/>
+        </action>
+
+        <action id="reader.OpenPlatformBrowser"
+                class="com.reader.jetbrains.actions.OpenPlatformBrowserAction"
+                text="Open Platform Browser"
+                description="Open Fanqie, Qidian, or another platform login page"
+                icon="AllIcons.General.Balloon">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift B"/>
+        </action>
+
+        <action id="reader.OpenWebReader"
+                class="com.reader.jetbrains.actions.OpenWebReaderAction"
+                text="Open Web Reader"
+                description="Load a third-party novel page and extract body text"
+                icon="AllIcons.Actions.SearchWithHistory">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift W"/>
+        </action>
+
+        <group id="reader.group.EditorPopup" text="Reader" popup="true" icon="AllIcons.General.Balloon">
+            <reference id="reader.ShowNativeReader"/>
+            <reference id="reader.HideNativeReader"/>
+            <reference id="reader.OpenToc"/>
+            <separator/>
+            <reference id="reader.NextChapter"/>
+            <reference id="reader.ToggleAutoNextChapter"/>
+            <separator/>
+            <reference id="reader.OpenLocalBook"/>
+            <reference id="reader.OpenPlatformBrowser"/>
+            <reference id="reader.OpenWebReader"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </group>
+
+        <group id="reader.group.Tools">
+            <reference id="reader.OpenLocalBook"/>
+            <reference id="reader.ShowNativeReader"/>
+            <reference id="reader.HideNativeReader"/>
+            <reference id="reader.OpenToc"/>
+            <reference id="reader.NextChapter"/>
+            <reference id="reader.ToggleAutoNextChapter"/>
+            <separator/>
+            <reference id="reader.OpenPlatformBrowser"/>
+            <reference id="reader.OpenWebReader"/>
+            <add-to-group group-id="reader.group.Main"/>
+        </group>
+    </actions>
+</idea-plugin>

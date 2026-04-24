@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+
+# IDE metadata
+.idea/
+*.iml
+
+# Build outputs
+build/
+out/
+target/
+
+# Gradle
+.gradle/
+gradle-app.setting
+
+# Local downloaded toolchains and installers
+.tools/
+
+# JetBrains plugin project outputs/caches
+jetbrains/build/
+jetbrains/.gradle/
+jetbrains/.tools/
+jetbrains/out/
+jetbrains/.idea/
+
+# VS Code extension outputs/caches
+vscode/out/
+vscode/dist/
+vscode/node_modules/
+vscode/.vscode-test/
