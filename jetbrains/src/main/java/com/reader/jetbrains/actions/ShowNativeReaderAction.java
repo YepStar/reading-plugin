@@ -17,12 +17,12 @@ public final class ShowNativeReaderAction extends AnAction {
             return;
         }
         if (project.getService(ReaderStateService.class).currentChapter() == null) {
-            Messages.showWarningDialog(project, "Open a TXT, EPUB, or web page first.", "Reader");
+            Messages.showWarningDialog(project, "请先打开 TXT / EPUB 或网页正文。", "Reader-plugin-yip");
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);
         if (editor == null) {
-            Messages.showWarningDialog(project, "Open an editor tab before showing the native hint.", "Reader");
+            Messages.showWarningDialog(project, "请先打开任意编辑器标签页，再显示原生提示层。", "Reader-plugin-yip");
             return;
         }
         ReaderHintController.show(project, editor);

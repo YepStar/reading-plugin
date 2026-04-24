@@ -18,7 +18,7 @@ public final class NextChapterAction extends AnAction {
         }
         ReaderStateService state = project.getService(ReaderStateService.class);
         if (!state.nextChapter()) {
-            Messages.showInfoMessage(project, "Already at the last chapter.", "Reader");
+            Messages.showInfoMessage(project, "已经是最后一章。", "Reader-plugin-yip");
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);

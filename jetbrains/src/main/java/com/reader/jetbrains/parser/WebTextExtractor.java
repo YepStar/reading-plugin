@@ -32,6 +32,12 @@ public final class WebTextExtractor {
         return BookParser.fromWebText(title, BookParser.htmlToPlainText(body), chapterRegex);
     }
 
+    public static Book extractFromHtml(String url, String title, String html, String chapterRegex) {
+        String readableTitle = title == null || title.isBlank() ? extractTitle(html, url) : title;
+        String body = bestReadableHtml(html == null ? "" : html);
+        return BookParser.fromWebText(readableTitle, BookParser.htmlToPlainText(body), chapterRegex);
+    }
+
     private static String bestReadableHtml(String html) {
         Matcher matcher = MAIN_PATTERN.matcher(html);
         String best = "";

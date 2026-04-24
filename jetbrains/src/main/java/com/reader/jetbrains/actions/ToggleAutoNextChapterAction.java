@@ -28,21 +28,21 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
         }
         ReaderStateService state = project.getService(ReaderStateService.class);
         if (state.chapters().isEmpty()) {
-            Messages.showWarningDialog(project, "No book is loaded.", "Reader");
+            Messages.showWarningDialog(project, "当前没有已导入的书籍或网页正文。", "Reader-plugin-yip");
             return;
         }
         ScheduledExecutorService running = EXECUTORS.remove(project);
         if (running != null) {
             running.shutdownNow();
             state.setAutoNextRunning(false);
-            Messages.showInfoMessage(project, "Auto next chapter stopped.", "Reader");
+            Messages.showInfoMessage(project, "已停止自动下一章。", "Reader-plugin-yip");
             return;
         }
 
         String secondsText = Messages.showInputDialog(
                 project,
-                "Seconds between chapters.",
-                "Auto Next Chapter",
+                "请输入自动切换章节的间隔秒数。",
+                "自动下一章",
                 Messages.getQuestionIcon(),
                 "90",
                 null
@@ -65,7 +65,7 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
                 ReaderHintController.show(project, editor);
             }
         }), seconds, seconds, TimeUnit.SECONDS);
-        Messages.showInfoMessage(project, "Auto next chapter started.", "Reader");
+        Messages.showInfoMessage(project, "已启动自动下一章。", "Reader-plugin-yip");
     }
 
     private static int parseSeconds(String secondsText) {

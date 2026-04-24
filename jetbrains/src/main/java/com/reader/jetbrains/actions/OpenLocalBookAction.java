@@ -15,6 +15,7 @@ import com.reader.jetbrains.ui.ReaderHintController;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.nio.charset.Charset;
 
 public final class OpenLocalBookAction extends AnAction {
     @Override
@@ -37,15 +38,17 @@ public final class OpenLocalBookAction extends AnAction {
 
         String regex = ReaderActionUtil.askChapterRegex(project);
         try {
-            Book book = BookParser.parse(Path.of(file.getPath()), regex, ReaderActionUtil.askCharset(project));
-            project.getService(ReaderStateService.class).load(book);
+            Path path = Path.of(file.getPath());
+            Charset charset = ReaderActionUtil.askCharset(project);
+            Book book = BookParser.parse(path, regex, charset);
+            project.getService(ReaderStateService.class).loadLocal(path, regex, charset, book);
             Editor editor = ReaderActionUtil.editor(event, project);
             if (editor != null) {
                 ReaderHintController.show(project, editor);
             }
-            Messages.showInfoMessage(project, "Loaded " + book.chapters().size() + " chapters.", "Reader");
+            Messages.showInfoMessage(project, "已导入并保存阅读进度，共 " + book.chapters().size() + " 个章节。", "Reader-plugin-yip");
         } catch (Exception exception) {
-            Messages.showErrorDialog(project, exception.getMessage(), "Failed to Open Book");
+            Messages.showErrorDialog(project, exception.getMessage(), "导入本地书籍失败");
         }
     }
 }

@@ -1,4 +1,4 @@
-# Reader for JetBrains
+# Reader-plugin-yip for JetBrains
 
 中文说明见仓库根目录 [README_zh.md](../README_zh.md)。
 
@@ -17,9 +17,9 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 
 ## How to Open
 
-- `View > Tool Windows > Reader`
-- `Tools > Reader`
-- Search actions with `Shift Shift`, then type `Reader`
+- `View > Tool Windows > Reader-plugin-yip`
+- `Tools > Reader-plugin-yip`
+- Search actions with `Shift Shift`, then type `Reader-plugin-yip`
 
 ## Main Actions
 

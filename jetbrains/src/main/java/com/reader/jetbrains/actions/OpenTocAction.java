@@ -27,7 +27,7 @@ public final class OpenTocAction extends AnAction {
         ReaderStateService state = project.getService(ReaderStateService.class);
         List<Chapter> chapters = state.chapters();
         if (chapters.isEmpty()) {
-            Messages.showWarningDialog(project, "No book is loaded.", "Reader");
+            Messages.showWarningDialog(project, "当前没有已导入的书籍或网页正文。", "Reader-plugin-yip");
             return;
         }
 
@@ -38,7 +38,7 @@ public final class OpenTocAction extends AnAction {
         JBScrollPane scrollPane = new JBScrollPane(list);
         scrollPane.setPreferredSize(new Dimension(420, 520));
         DialogBuilder builder = new DialogBuilder(project);
-        builder.setTitle("Table of Contents");
+        builder.setTitle("目录");
         builder.setCenterPanel(scrollPane);
         builder.setOkActionEnabled(true);
         if (!builder.showAndGet()) {

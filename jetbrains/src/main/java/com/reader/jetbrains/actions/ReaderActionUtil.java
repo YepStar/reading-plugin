@@ -23,8 +23,8 @@ final class ReaderActionUtil {
     static String askChapterRegex(Project project) {
         String value = Messages.showInputDialog(
                 project,
-                "Chapter regex. The first capture group is used as the chapter title.",
-                "Chapter Split",
+                "请输入章节拆分正则。第一个捕获组会作为章节标题。",
+                "章节拆分",
                 Messages.getQuestionIcon(),
                 BookParser.DEFAULT_CHAPTER_REGEX,
                 null
@@ -35,8 +35,8 @@ final class ReaderActionUtil {
     static Charset askCharset(Project project) {
         String value = Messages.showInputDialog(
                 project,
-                "Text charset for TXT files.",
-                "Charset",
+                "请输入 TXT 文件编码。",
+                "文本编码",
                 Messages.getQuestionIcon(),
                 StandardCharsets.UTF_8.name(),
                 null
@@ -47,7 +47,7 @@ final class ReaderActionUtil {
         try {
             return Charset.forName(value.trim());
         } catch (Exception ignored) {
-            Messages.showWarningDialog(project, "Unknown charset. UTF-8 will be used.", "Reader");
+            Messages.showWarningDialog(project, "未知编码，将使用 UTF-8。", "Reader-plugin-yip");
             return StandardCharsets.UTF_8;
         }
     }

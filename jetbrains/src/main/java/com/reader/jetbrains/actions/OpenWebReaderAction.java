@@ -21,12 +21,12 @@ public final class OpenWebReaderAction extends AnAction {
         if (project == null) {
             return;
         }
-        String url = Messages.showInputDialog(project, "Novel page URL", "Web Reader", Messages.getQuestionIcon(), "https://", null);
+        String url = Messages.showInputDialog(project, "请输入小说网页 URL", "网页正文提取", Messages.getQuestionIcon(), "https://", null);
         if (url == null || url.isBlank()) {
             return;
         }
         String regex = ReaderActionUtil.askChapterRegex(project);
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Loading web reader page", true) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, "正在加载网页正文", true) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 try {
@@ -37,11 +37,11 @@ public final class OpenWebReaderAction extends AnAction {
                         if (editor != null) {
                             ReaderHintController.show(project, editor);
                         }
-                        Messages.showInfoMessage(project, "Loaded " + book.chapters().size() + " readable sections.", "Reader");
+                        Messages.showInfoMessage(project, "已导入 " + book.chapters().size() + " 个可读片段。", "Reader-plugin-yip");
                     });
                 } catch (Exception exception) {
                     javax.swing.SwingUtilities.invokeLater(() ->
-                            Messages.showErrorDialog(project, exception.getMessage(), "Failed to Load Web Page")
+                            Messages.showErrorDialog(project, exception.getMessage(), "加载网页失败")
                     );
                 }
             }

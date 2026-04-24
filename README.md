@@ -1,4 +1,4 @@
-# Reading Plugin
+# Reader-plugin-yip
 
 [中文使用说明](README_zh.md)
 
@@ -13,7 +13,7 @@ The JetBrains version keeps the W-Reader-style native editor hint surface and ad
 
 After installing the JetBrains plugin and restarting the IDE:
 
-1. Open `View > Tool Windows > Reader`.
+1. Open `View > Tool Windows > Reader-plugin-yip`.
 2. Use `Open TXT / EPUB` to load a local book, or `Web Text Extractor` to load a novel page.
 3. Use `Show Native Reader` to display the editor hint reader.
 4. Customize shortcuts in `Settings / Preferences > Keymap`, then search `Reader`.
