@@ -32,20 +32,12 @@
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift O"/>
         </action>
 
-        <action id="reader.ShowNativeReader"
-                class="com.reader.jetbrains.actions.ShowNativeReaderAction"
-                text="显示原生提示层"
-                description="在编辑器内显示当前章节"
+        <action id="reader.ToggleNativeReader"
+                class="com.reader.jetbrains.actions.ToggleNativeReaderAction"
+                text="显示/隐藏原生提示层"
+                description="用同一个快捷键切换编辑器内阅读浮层"
                 icon="AllIcons.General.Balloon">
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift R"/>
-        </action>
-
-        <action id="reader.HideNativeReader"
-                class="com.reader.jetbrains.actions.HideNativeReaderAction"
-                text="隐藏原生提示层"
-                description="关闭编辑器内阅读浮层"
-                icon="AllIcons.Actions.Close">
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift H"/>
         </action>
 
         <action id="reader.OpenToc"
@@ -89,8 +81,7 @@
         </action>
 
         <group id="reader.group.EditorPopup" text="Reader-plugin-yip" popup="true" icon="AllIcons.General.Balloon">
-            <reference id="reader.ShowNativeReader"/>
-            <reference id="reader.HideNativeReader"/>
+            <reference id="reader.ToggleNativeReader"/>
             <reference id="reader.OpenToc"/>
             <separator/>
             <reference id="reader.NextChapter"/>
@@ -104,8 +95,7 @@
 
         <group id="reader.group.Tools">
             <reference id="reader.OpenLocalBook"/>
-            <reference id="reader.ShowNativeReader"/>
-            <reference id="reader.HideNativeReader"/>
+            <reference id="reader.ToggleNativeReader"/>
             <reference id="reader.OpenToc"/>
             <reference id="reader.NextChapter"/>
             <reference id="reader.ToggleAutoNextChapter"/>

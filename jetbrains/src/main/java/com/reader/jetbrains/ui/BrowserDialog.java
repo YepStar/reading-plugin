@@ -26,6 +26,9 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
+import org.cef.handler.CefLifeSpanHandlerAdapter;
 
 public final class BrowserDialog extends DialogWrapper {
     private final Project project;
@@ -57,6 +60,18 @@ public final class BrowserDialog extends DialogWrapper {
         }
 
         browser = new JBCefBrowser(initialUrl);
+        browser.getJBCefClient().addLifeSpanHandler(new CefLifeSpanHandlerAdapter() {
+            @Override
+            public boolean onBeforePopup(CefBrowser cefBrowser, CefFrame frame, String targetUrl, String targetFrameName) {
+                if (targetUrl != null && !targetUrl.isBlank()) {
+                    SwingUtilities.invokeLater(() -> {
+                        browser.loadURL(targetUrl);
+                        project.getService(ReaderStateService.class).setLastPlatformUrl(targetUrl);
+                    });
+                }
+                return true;
+            }
+        }, browser.getCefBrowser());
         panel.add(browser.getComponent(), BorderLayout.CENTER);
         return panel;
     }

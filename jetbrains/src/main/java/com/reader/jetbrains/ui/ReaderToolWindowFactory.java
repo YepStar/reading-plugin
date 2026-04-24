@@ -40,8 +40,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
         int row = 0;
         row = addSection(actions, row, "导入与阅读");
         row = addActionButton(project, actions, row, "打开 TXT / EPUB", "reader.OpenLocalBook");
-        row = addActionButton(project, actions, row, "显示原生提示层 / 恢复进度", "reader.ShowNativeReader");
-        row = addActionButton(project, actions, row, "隐藏原生提示层", "reader.HideNativeReader");
+        row = addActionButton(project, actions, row, "显示/隐藏原生提示层", "reader.ToggleNativeReader");
 
         row = addSection(actions, row, "章节控制");
         row = addActionButton(project, actions, row, "打开目录", "reader.OpenToc");
@@ -54,7 +53,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
 
         row = addSection(actions, row, "快捷键");
         addText(actions, row++, "设置位置：Settings / Preferences > Keymap，搜索 Reader-plugin-yip。");
-        addText(actions, row++, "默认快捷键：Alt+Shift+O/R/H/T/N/A/B/W。");
+        addText(actions, row++, "默认快捷键：Alt+Shift+O/R/T/N/A/B/W。");
 
         root.add(actions, BorderLayout.NORTH);
         return root;

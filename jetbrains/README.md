@@ -23,14 +23,13 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 
 ## Main Actions
 
-- `Reader | Open Local Book`
-- `Reader | Show Native Reader`
-- `Reader | Hide Native Reader`
-- `Reader | Open Table of Contents`
-- `Reader | Next Chapter`
-- `Reader | Toggle Auto Next Chapter`
-- `Reader | Open Platform Browser`
-- `Reader | Open Web Reader`
+- `Reader-plugin-yip | 打开本地 TXT / EPUB`
+- `Reader-plugin-yip | 显示/隐藏原生提示层`
+- `Reader-plugin-yip | 打开目录`
+- `Reader-plugin-yip | 下一章`
+- `Reader-plugin-yip | 自动下一章 开/关`
+- `Reader-plugin-yip | 平台网页登录`
+- `Reader-plugin-yip | 网页正文提取`
 
 Default shortcuts are declared in `src/main/resources/META-INF/plugin.xml`.
 
