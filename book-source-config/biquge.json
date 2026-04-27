@@ -1,0 +1,49 @@
+{
+  "id": "biquge",
+  "name": "笔趣阁",
+  "type": "json",
+  "baseUrl": "https://m.bqgde.de/",
+  "enabled": true,
+  "search": {
+    "url": "https://m.bqgde.de/user/search.html?q=${key}",
+    "dataPath": "$[*]",
+    "listSelector": "",
+    "titleSelector": "",
+    "urlSelector": ""
+  },
+  "catalog": {
+    "url": "https://apibi.cc/api/booklist?id=${bookId}",
+    "dataPath": "$.list[*]",
+    "listSelector": "",
+    "titleSelector": "",
+    "urlSelector": "",
+    "itemIdField": "",
+    "itemTitleField": "",
+    "itemUrlField": ""
+  },
+  "content": {
+    "url": "https://apibi.cc/api/chapter?id=${bookId}&chapterid=${itemId}",
+    "dataPath": "$.txt",
+    "selector": ""
+  },
+  "info": {
+    "bookIdField": "url_list",
+    "titleField": "articlename",
+    "authorField": "author",
+    "descField": "intro",
+    "urlField": "url_list",
+    "coverField": "url_img"
+  },
+  "processor": {
+    "bookId": {
+      "from": "url_list",
+      "regex": "/book/(\\d+)/",
+      "replace": "$1"
+    },
+    "itemId": {
+      "from": "chapterTitle",
+      "regex": "^第(\\d+)章",
+      "replace": "$1"
+    }
+  }
+}
