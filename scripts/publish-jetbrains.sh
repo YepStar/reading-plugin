@@ -28,7 +28,19 @@ if ! command -v "$JAVA_CMD" >/dev/null 2>&1; then
   exit 1
 fi
 
-JAVA_VERSION="$("$JAVA_CMD" -version 2>&1 | awk -F '"' '/version/ {print $2; exit}')"
+JAVA_VERSION_OUTPUT="$("$JAVA_CMD" -version 2>&1)" || {
+  echo "Java command exists but cannot run:" >&2
+  echo "$JAVA_VERSION_OUTPUT" >&2
+  echo "Install JDK 17/21 and set JAVA_HOME before publishing." >&2
+  exit 1
+}
+JAVA_VERSION="$(echo "$JAVA_VERSION_OUTPUT" | awk -F '"' '/version/ {print $2; exit}')"
+if [[ -z "$JAVA_VERSION" ]]; then
+  echo "Cannot detect Java version from:" >&2
+  echo "$JAVA_VERSION_OUTPUT" >&2
+  echo "Install JDK 17/21 and set JAVA_HOME before publishing." >&2
+  exit 1
+fi
 JAVA_MAJOR="${JAVA_VERSION%%.*}"
 if [[ "$JAVA_MAJOR" == "1" ]]; then
   JAVA_MAJOR="$(echo "$JAVA_VERSION" | cut -d. -f2)"
