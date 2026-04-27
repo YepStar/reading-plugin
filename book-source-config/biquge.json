@@ -37,7 +37,7 @@
   "processor": {
     "bookId": {
       "from": "url_img",
-      "regex": "/bookimg/\\d+/(\\d+)\\.jpg",
+      "regex": "^.*/bookimg/\\d+/(\\d+)\\.jpg$",
       "replace": "$1"
     },
     "itemId": {
