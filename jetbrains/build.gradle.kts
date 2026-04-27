@@ -6,6 +6,13 @@ plugins {
 group = providers.gradleProperty("pluginGroup").get()
 version = providers.gradleProperty("pluginVersion").get()
 
+val publishingToken = providers.gradleProperty("intellijPlatformPublishingToken")
+    .orElse(providers.environmentVariable("JETBRAINS_MARKETPLACE_TOKEN"))
+    .orElse("")
+val publishingChannels = providers.gradleProperty("pluginChannels")
+    .map { channels -> channels.split(',').map(String::trim).filter(String::isNotBlank) }
+    .orElse(listOf("default"))
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
@@ -23,6 +30,11 @@ intellijPlatform {
         ideaVersion {
             sinceBuild = "242"
         }
+    }
+    publishing {
+        token = publishingToken
+        channels = publishingChannels
+        hidden = false
     }
 }
 

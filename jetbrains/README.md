@@ -42,7 +42,30 @@ Default shortcuts are declared in `src/main/resources/META-INF/plugin.xml`.
 ## Build
 
 ```bash
-./gradlew buildPlugin
+../scripts/package-jetbrains.sh
 ```
 
-This project uses the IntelliJ Platform Gradle Plugin and downloads the target IDE during the first build.
+The package script creates:
+
+```bash
+jetbrains/build/distributions/reader-jetbrains-0.1.0.zip
+```
+
+## Publish
+
+Version `0.1.0` is configured in `gradle.properties` and `plugin.xml`.
+
+Publishing is wired through the IntelliJ Platform Gradle Plugin `publishPlugin` task. Use a JetBrains Marketplace token:
+
+```bash
+export JETBRAINS_MARKETPLACE_TOKEN=...
+scripts/publish-jetbrains.sh
+```
+
+The default publish channel is `default`. Override it with:
+
+```bash
+PLUGIN_CHANNELS=eap scripts/publish-jetbrains.sh
+```
+
+Run publishing with JDK 17 or 21. Do not commit tokens.
