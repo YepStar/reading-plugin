@@ -9,6 +9,7 @@ import com.reader.jetbrains.state.ReaderStateService;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
+import org.cef.handler.CefLoadHandlerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,6 +64,12 @@ public final class BrowserDialog extends DialogWrapper {
                 return true;
             }
         }, browser.getCefBrowser());
+        browser.getJBCefClient().addLoadHandler(new CefLoadHandlerAdapter() {
+            @Override
+            public void onLoadEnd(CefBrowser cefBrowser, CefFrame frame, int httpStatusCode) {
+                rememberUrl(cefBrowser);
+            }
+        }, browser.getCefBrowser());
         panel.add(browser.getComponent(), BorderLayout.CENTER);
         return panel;
     }
@@ -96,9 +103,16 @@ public final class BrowserDialog extends DialogWrapper {
 
     private void rememberCurrentUrl() {
         if (browser != null && browser.getCefBrowser() != null) {
-            String url = browser.getCefBrowser().getURL();
-            project.getService(ReaderStateService.class).setLastPlatformUrl(url);
+            rememberUrl(browser.getCefBrowser());
         }
+    }
+
+    private void rememberUrl(CefBrowser cefBrowser) {
+        if (cefBrowser == null) {
+            return;
+        }
+        String url = cefBrowser.getURL();
+        project.getService(ReaderStateService.class).setLastPlatformUrl(url);
     }
 
 }

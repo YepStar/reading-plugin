@@ -12,6 +12,7 @@ import com.reader.jetbrains.state.ReaderStateService;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
+import org.cef.handler.CefLoadHandlerAdapter;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,6 +56,12 @@ public final class PlatformBrowserPopup {
                 return true;
             }
         }, browser.getCefBrowser());
+        browser.getJBCefClient().addLoadHandler(new CefLoadHandlerAdapter() {
+            @Override
+            public void onLoadEnd(CefBrowser cefBrowser, CefFrame frame, int httpStatusCode) {
+                rememberUrl(project, cefBrowser);
+            }
+        }, browser.getCefBrowser());
         panel.add(browser.getComponent(), BorderLayout.CENTER);
 
         JBPopup popup = JBPopupFactory.getInstance()
@@ -65,8 +72,7 @@ public final class PlatformBrowserPopup {
                 .setCancelOnClickOutside(false)
                 .setRequestFocus(true)
                 .setCancelCallback(() -> {
-                    String currentUrl = browser.getCefBrowser().getURL();
-                    project.getService(ReaderStateService.class).setLastPlatformUrl(currentUrl);
+                    rememberUrl(project, browser.getCefBrowser());
                     saveBounds(panel, settings);
                     browser.dispose();
                     return true;
@@ -119,5 +125,13 @@ public final class PlatformBrowserPopup {
                 settings.savePlatformPopupBounds(window.getLocation(), contentSize);
             }
         }
+    }
+
+    private static void rememberUrl(Project project, CefBrowser browser) {
+        if (browser == null) {
+            return;
+        }
+        String url = browser.getURL();
+        project.getService(ReaderStateService.class).setLastPlatformUrl(url);
     }
 }

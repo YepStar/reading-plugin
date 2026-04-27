@@ -20,31 +20,23 @@ public final class OpenPlatformBrowserAction extends AnAction {
         ReaderStateService state = project.getService(ReaderStateService.class);
         String lastUrl = state.lastPlatformUrl();
         String[] options = {
-                "上次页面：" + lastUrl,
+                lastUrl,
                 "https://fanqienovel.com/",
                 "https://www.qidian.com/",
-                "https://weread.qq.com/",
-                "自定义 URL"
+                "https://weread.qq.com/"
         };
         String selected = (String) Messages.showEditableChooseDialog(
-                "选择要打开的平台页面。登录状态会由 WebStorm 内嵌浏览器保留。",
+                "选择或输入要打开的平台页面。登录状态会由 WebStorm 内嵌浏览器保留。",
                 "平台网页浮窗",
                 Messages.getQuestionIcon(),
                 options,
-                options[0],
+                lastUrl,
                 null
         );
         if (selected == null || selected.isBlank()) {
             return;
         }
-        String url;
-        if (selected.startsWith("上次页面：")) {
-            url = lastUrl;
-        } else if (selected.equals("自定义 URL")) {
-            url = Messages.showInputDialog(project, "请输入 URL", "平台网页浮窗", Messages.getQuestionIcon(), "https://", null);
-        } else {
-            url = selected;
-        }
+        String url = selected;
         if (url == null || url.isBlank()) {
             return;
         }
