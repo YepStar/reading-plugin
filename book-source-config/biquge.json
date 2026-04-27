@@ -27,17 +27,17 @@
     "selector": ""
   },
   "info": {
-    "bookIdField": "url_list",
+    "bookIdField": "url_img",
     "titleField": "articlename",
     "authorField": "author",
     "descField": "intro",
-    "urlField": "url_list",
+    "urlField": "url_img",
     "coverField": "url_img"
   },
   "processor": {
     "bookId": {
-      "from": "url_list",
-      "regex": "/book/(\\d+)/",
+      "from": "url_img",
+      "regex": "/bookimg/\\d+/(\\d+)\\.jpg",
       "replace": "$1"
     },
     "itemId": {
