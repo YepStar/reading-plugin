@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Rectangle;
 
 @Service(Service.Level.APP)
 @State(name = "ReaderYipSettings", storages = @Storage("reader-yip-settings.xml"))
@@ -93,14 +92,14 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
         return new Point(state.platformPopupX, state.platformPopupY);
     }
 
-    public synchronized void savePlatformPopupBounds(Rectangle bounds) {
-        if (bounds == null || bounds.width <= 0 || bounds.height <= 0) {
+    public synchronized void savePlatformPopupBounds(Point location, Dimension contentSize) {
+        if (location == null || contentSize == null || contentSize.width <= 0 || contentSize.height <= 0) {
             return;
         }
-        state.platformPopupX = bounds.x;
-        state.platformPopupY = bounds.y;
-        state.platformPopupWidth = bounds.width;
-        state.platformPopupHeight = bounds.height;
+        state.platformPopupX = location.x;
+        state.platformPopupY = location.y;
+        state.platformPopupWidth = contentSize.width;
+        state.platformPopupHeight = contentSize.height;
     }
 
     private static int clamp(int value, int min, int max) {

@@ -18,8 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.IllegalComponentStateException;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Window;
 
 public final class PlatformBrowserPopup {
@@ -108,7 +109,15 @@ public final class PlatformBrowserPopup {
     private static void saveBounds(JPanel panel, ReaderSettingsService settings) {
         Window window = SwingUtilities.getWindowAncestor(panel);
         if (window != null) {
-            settings.savePlatformPopupBounds(new Rectangle(window.getBounds()));
+            Dimension contentSize = panel.getSize();
+            if (contentSize.width <= 0 || contentSize.height <= 0) {
+                contentSize = panel.getPreferredSize();
+            }
+            try {
+                settings.savePlatformPopupBounds(window.getLocationOnScreen(), contentSize);
+            } catch (IllegalComponentStateException ignored) {
+                settings.savePlatformPopupBounds(window.getLocation(), contentSize);
+            }
         }
     }
 }
