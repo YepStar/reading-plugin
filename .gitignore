@@ -17,6 +17,12 @@ gradle-app.setting
 # Local downloaded toolchains and installers
 .tools/
 
+# Local secrets
+.env
+.env.*
+!.env.example
+jetbrains/.marketplace.env
+
 # JetBrains plugin project outputs/caches
 jetbrains/build/
 jetbrains/.gradle/

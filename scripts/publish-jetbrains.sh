@@ -3,10 +3,18 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 JETBRAINS_DIR="$ROOT_DIR/jetbrains"
+LOCAL_ENV_FILE="$JETBRAINS_DIR/.marketplace.env"
+
+if [[ -f "$LOCAL_ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$LOCAL_ENV_FILE"
+  set +a
+fi
 
 if [[ -z "${JETBRAINS_MARKETPLACE_TOKEN:-}" && -z "${INTELLIJ_PLATFORM_PUBLISHING_TOKEN:-}" ]]; then
   echo "Missing JetBrains Marketplace token." >&2
-  echo "Set JETBRAINS_MARKETPLACE_TOKEN, then rerun this script." >&2
+  echo "Set JETBRAINS_MARKETPLACE_TOKEN or create jetbrains/.marketplace.env, then rerun this script." >&2
   exit 1
 fi
 
