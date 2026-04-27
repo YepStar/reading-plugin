@@ -47,6 +47,31 @@ JSON 书源使用 `dataPath` 取数据：
 
 如果字段不能直接使用，可以通过 `processor` 提取。
 
+目录数组既可以是对象数组，也可以是字符串数组。
+
+对象数组示例：
+
+```json
+{
+  "list": [
+    { "chapter_id": "12", "chapter_title": "第12章 风起" }
+  ]
+}
+```
+
+字符串数组示例：
+
+```json
+{
+  "list": [
+    "第1章 蜂落",
+    "第2章 猫面"
+  ]
+}
+```
+
+对于字符串数组，插件会把每个字符串同时当作 `chapterTitle` 和 `title`，再交给 `processor.itemId` 提取 `${itemId}`。
+
 ## HTML 书源
 
 HTML 书源使用简化选择器：

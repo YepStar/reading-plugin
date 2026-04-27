@@ -11,6 +11,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -95,22 +96,30 @@ public final class BookSourceClient {
         }
         List<RemoteChapter> chapters = new ArrayList<>();
         for (Object item : list) {
-            if (!(item instanceof Map<?, ?> map)) {
+            if (item instanceof Map<?, ?> map) {
+                String title = firstNonBlank(
+                        SimpleJson.stringField(item, source.catalog.itemTitleField),
+                        SimpleJson.stringField(item, "chapter_title"),
+                        SimpleJson.stringField(item, "chaptername"),
+                        SimpleJson.stringField(item, "chapterTitle"),
+                        SimpleJson.stringField(item, "title"),
+                        SimpleJson.stringField(item, "name")
+                );
+                String itemId = processed(source, "itemId", map, source.catalog.itemIdField);
+                String url = source.catalog.itemUrlField == null || source.catalog.itemUrlField.isBlank()
+                        ? ""
+                        : SimpleJson.stringField(item, source.catalog.itemUrlField);
+                chapters.add(new RemoteChapter(title, url, itemId));
                 continue;
             }
-            String title = firstNonBlank(
-                    SimpleJson.stringField(item, source.catalog.itemTitleField),
-                    SimpleJson.stringField(item, "chapter_title"),
-                    SimpleJson.stringField(item, "chaptername"),
-                    SimpleJson.stringField(item, "chapterTitle"),
-                    SimpleJson.stringField(item, "title"),
-                    SimpleJson.stringField(item, "name")
-            );
-            String itemId = processed(source, "itemId", map, source.catalog.itemIdField);
-            String url = source.catalog.itemUrlField == null || source.catalog.itemUrlField.isBlank()
-                    ? ""
-                    : SimpleJson.stringField(item, source.catalog.itemUrlField);
-            chapters.add(new RemoteChapter(title, url, itemId));
+            String title = item == null ? "" : String.valueOf(item);
+            if (title.isBlank()) {
+                continue;
+            }
+            Map<String, Object> values = new LinkedHashMap<>();
+            values.put("chapterTitle", title);
+            values.put("title", title);
+            chapters.add(new RemoteChapter(title, "", processed(source, "itemId", values, "chapterTitle")));
         }
         return chapters;
     }
