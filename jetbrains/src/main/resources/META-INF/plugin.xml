@@ -6,7 +6,7 @@
     <idea-version since-build="242"/>
 
     <description><![CDATA[
-        <p>Native editor reader for local TXT/EPUB files and cleaned web novel pages.</p>
+        <p>致敬摸鱼阅读插件先行者W-Reader，地址：https://plugins.jetbrains.com/plugin/25572-w-reader。该版本在保留其部分功能的同时，优化了自行上传文件与正则解析章节名拆分。以及网络搜索的书源管理。请用户自行负责访问内容来源合规，插件不内置或分发小说内容。</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
