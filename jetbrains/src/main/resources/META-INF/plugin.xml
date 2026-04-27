@@ -1,18 +1,23 @@
 <idea-plugin>
     <id>com.reader.jetbrains</id>
     <name>Reader Yip</name>
-    <version>0.1.1</version>
+    <version>0.1.0</version>
     <vendor>Reader</vendor>
     <idea-version since-build="242"/>
 
     <description><![CDATA[
-        <p>Reader Yip is a lightweight reading utility for JetBrains IDEs. It provides an editor-native reading hint for local TXT and EPUB files, configurable chapter splitting, table-of-contents navigation, persisted reading progress, web text extraction, platform browser import, and configurable online book sources.</p>
+        <p>Reader Yip is a lightweight reading utility for JetBrains IDEs. It provides an editor-native reading hint for local TXT and EPUB files, configurable chapter splitting, table-of-contents navigation, persisted reading progress, web text extraction, compact platform browser popups, and configurable online book sources.</p>
         <p>This plugin is inspired by W-Reader and focuses on local user-controlled reading workflows. Users are responsible for ensuring that any websites, book sources, and content they access comply with applicable laws and platform terms. The plugin does not bundle, host, or distribute novel content.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.reader.jetbrains.settings.ReaderSettingsService"/>
+        <applicationConfigurable parentId="tools"
+                                 instance="com.reader.jetbrains.settings.ReaderSettingsConfigurable"
+                                 id="reader.yip.settings"
+                                 displayName="Reader Yip"/>
         <projectService serviceImplementation="com.reader.jetbrains.state.ReaderStateService"/>
         <projectService serviceImplementation="com.reader.jetbrains.sources.BookSourceService"/>
         <toolWindow id="Reader Yip"
@@ -76,8 +81,8 @@
 
         <action id="reader.OpenPlatformBrowser"
                 class="com.reader.jetbrains.actions.OpenPlatformBrowserAction"
-                text="平台网页登录"
-                description="打开番茄、起点、微信读书或自定义平台页面"
+                text="平台网页浮窗"
+                description="打开番茄、起点、微信读书或自定义平台页面；不导入页面内容"
                 icon="AllIcons.General.Balloon">
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift B"/>
         </action>

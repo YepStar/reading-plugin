@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.reader.jetbrains.model.Book;
 import com.reader.jetbrains.model.Chapter;
+import com.reader.jetbrains.settings.ReaderSettingsService;
 import com.reader.jetbrains.state.ReaderStateService;
 
 import javax.swing.JEditorPane;
@@ -16,9 +17,6 @@ import java.awt.Dimension;
 import java.lang.reflect.Method;
 
 public final class ReaderHintController {
-    private static final int DEFAULT_WIDTH = 420;
-    private static final int DEFAULT_HEIGHT = 260;
-
     private ReaderHintController() {
     }
 
@@ -39,7 +37,8 @@ public final class ReaderHintController {
         pane.setBackground(background);
 
         JBScrollPane scrollPane = new JBScrollPane(pane);
-        scrollPane.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+        ReaderSettingsService settings = ReaderSettingsService.getInstance();
+        scrollPane.setPreferredSize(new Dimension(settings.hintWidth(), settings.hintHeight()));
         scrollPane.setBorder(JBUI.Borders.empty());
 
         SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(state.hintScrollValue()));
@@ -69,15 +68,17 @@ public final class ReaderHintController {
     }
 
     private static String toHtml(Book book, Chapter chapter) {
+        ReaderSettingsService settings = ReaderSettingsService.getInstance();
+        String maxWidth = settings.maxLineChars() <= 0 ? "" : "max-width: " + settings.maxLineChars() + "em;";
         return """
                 <html>
-                  <body style="font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; font-size: 14px; line-height: 1.7; margin: 8px;">
+                  <body style="font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; font-size: %dpx; line-height: 1.7; margin: 8px; %s">
                     <div style="font-size: 12px; color: #8a8f98; margin-bottom: 8px;">%s</div>
                     <h3 style="margin: 0 0 8px 0;">%s</h3>
                     <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: inherit; margin: 0;">%s</pre>
                   </body>
                 </html>
-                """.formatted(escape(book == null ? "Reader" : book.title()), escape(chapter.title()), escape(chapter.text()));
+                """.formatted(settings.fontSize(), maxWidth, escape(book == null ? "Reader" : book.title()), escape(chapter.title()), escape(chapter.text()));
     }
 
     private static String escape(String text) {

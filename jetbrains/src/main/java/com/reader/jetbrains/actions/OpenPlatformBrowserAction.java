@@ -4,8 +4,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.reader.jetbrains.settings.ReaderSettingsService;
 import com.reader.jetbrains.state.ReaderStateService;
 import com.reader.jetbrains.ui.BrowserDialog;
+import com.reader.jetbrains.ui.PlatformBrowserPopup;
 import org.jetbrains.annotations.NotNull;
 
 public final class OpenPlatformBrowserAction extends AnAction {
@@ -26,7 +28,7 @@ public final class OpenPlatformBrowserAction extends AnAction {
         };
         String selected = (String) Messages.showEditableChooseDialog(
                 "选择要打开的平台页面。登录状态会由 WebStorm 内嵌浏览器保留。",
-                "平台网页登录",
+                "平台网页浮窗",
                 Messages.getQuestionIcon(),
                 options,
                 options[0],
@@ -39,7 +41,7 @@ public final class OpenPlatformBrowserAction extends AnAction {
         if (selected.startsWith("上次页面：")) {
             url = lastUrl;
         } else if (selected.equals("自定义 URL")) {
-            url = Messages.showInputDialog(project, "请输入 URL", "平台网页登录", Messages.getQuestionIcon(), "https://", null);
+            url = Messages.showInputDialog(project, "请输入 URL", "平台网页浮窗", Messages.getQuestionIcon(), "https://", null);
         } else {
             url = selected;
         }
@@ -48,7 +50,11 @@ public final class OpenPlatformBrowserAction extends AnAction {
         }
         String normalizedUrl = normalizeUrl(url);
         state.setLastPlatformUrl(normalizedUrl);
-        new BrowserDialog(project, normalizedUrl).show();
+        if ("dialog".equals(ReaderSettingsService.getInstance().platformBrowserMode())) {
+            new BrowserDialog(project, normalizedUrl).show();
+        } else {
+            PlatformBrowserPopup.show(project, normalizedUrl);
+        }
     }
 
     private static String normalizeUrl(String url) {

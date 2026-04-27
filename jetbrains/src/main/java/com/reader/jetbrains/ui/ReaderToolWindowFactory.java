@@ -49,7 +49,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
         row = addActionButton(project, actions, row, "自动下一章 开/关", "reader.ToggleAutoNextChapter");
 
         row = addSection(actions, row, "网页模式");
-        row = addActionButton(project, actions, row, "平台网页登录", "reader.OpenPlatformBrowser");
+        row = addActionButton(project, actions, row, "平台网页浮窗", "reader.OpenPlatformBrowser");
         row = addActionButton(project, actions, row, "网页正文提取", "reader.OpenWebReader");
 
         row = addSection(actions, row, "在线书源");

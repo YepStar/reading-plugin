@@ -1,40 +1,30 @@
 package com.reader.jetbrains.ui;
 
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefClient;
-import com.intellij.ui.jcef.JBCefJSQuery;
-import com.reader.jetbrains.model.Book;
-import com.reader.jetbrains.parser.BookParser;
-import com.reader.jetbrains.parser.WebTextExtractor;
 import com.reader.jetbrains.state.ReaderStateService;
+import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
+import org.cef.handler.CefLifeSpanHandlerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import org.cef.browser.CefBrowser;
-import org.cef.browser.CefFrame;
-import org.cef.handler.CefLifeSpanHandlerAdapter;
 
 public final class BrowserDialog extends DialogWrapper {
     private final Project project;
     private final String initialUrl;
     private JBCefBrowser browser;
     private JBCefClient client;
-    private JBCefJSQuery pageQuery;
 
     public BrowserDialog(Project project, String url) {
         super(project, false);
@@ -50,10 +40,6 @@ public final class BrowserDialog extends DialogWrapper {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setPreferredSize(new Dimension(1100, 760));
 
-        JButton importButton = new JButton("将当前页面导入原生提示层");
-        importButton.addActionListener(event -> importCurrentPage());
-        panel.add(importButton, BorderLayout.NORTH);
-
         if (!JBCefApp.isSupported()) {
             panel.add(new JLabel("当前 IDE 运行时不支持内嵌浏览器。"), BorderLayout.CENTER);
             return panel;
@@ -65,11 +51,6 @@ public final class BrowserDialog extends DialogWrapper {
                 .setUrl(initialUrl)
                 .setCreateImmediately(false)
                 .build();
-        pageQuery = JBCefJSQuery.create(browser);
-        pageQuery.addHandler(payload -> {
-            SwingUtilities.invokeLater(() -> importPayload(payload));
-            return new JBCefJSQuery.Response(null);
-        });
         browser.getJBCefClient().addLifeSpanHandler(new CefLifeSpanHandlerAdapter() {
             @Override
             public boolean onBeforePopup(CefBrowser cefBrowser, CefFrame frame, String targetUrl, String targetFrameName) {
@@ -106,58 +87,11 @@ public final class BrowserDialog extends DialogWrapper {
     @Override
     public void dispose() {
         rememberCurrentUrl();
-        if (pageQuery != null) {
-            pageQuery.dispose();
-            pageQuery = null;
-        }
         if (client != null) {
             client.dispose();
             client = null;
         }
         super.dispose();
-    }
-
-    private void importCurrentPage() {
-        if (browser == null) {
-            Messages.showWarningDialog(project, "当前没有可导入的网页。", "Reader Yip");
-            return;
-        }
-
-        String expression = """
-                encodeURIComponent(location.href) + '\\n' +
-                encodeURIComponent(document.title || '') + '\\n' +
-                encodeURIComponent(document.documentElement.outerHTML || '')
-                """;
-        browser.getCefBrowser().executeJavaScript(
-                pageQuery.inject(expression),
-                browser.getCefBrowser().getURL(),
-                0
-        );
-    }
-
-    private void importPayload(String payload) {
-        String[] parts = payload == null ? new String[0] : payload.split("\\n", 3);
-        if (parts.length < 3) {
-            Messages.showWarningDialog(project, "未能读取当前网页内容。", "Reader Yip");
-            return;
-        }
-
-        String url = decode(parts[0]);
-        String title = decode(parts[1]);
-        String html = decode(parts[2]);
-        project.getService(ReaderStateService.class).setLastPlatformUrl(url);
-
-        try {
-            Book book = WebTextExtractor.extractFromHtml(url, title, html, BookParser.DEFAULT_CHAPTER_REGEX);
-            project.getService(ReaderStateService.class).load(book);
-            var editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-            if (editor != null) {
-                ReaderHintController.show(project, editor);
-            }
-            Messages.showInfoMessage(project, "已将当前网页导入原生提示层。", "Reader Yip");
-        } catch (Exception exception) {
-            Messages.showErrorDialog(project, exception.getMessage(), "导入网页失败");
-        }
     }
 
     private void rememberCurrentUrl() {
@@ -167,7 +101,4 @@ public final class BrowserDialog extends DialogWrapper {
         }
     }
 
-    private static String decode(String text) {
-        return URLDecoder.decode(text == null ? "" : text, StandardCharsets.UTF_8);
-    }
 }

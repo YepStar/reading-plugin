@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.reader.jetbrains.settings.ReaderSettingsService;
 import com.reader.jetbrains.state.ReaderStateService;
 import com.reader.jetbrains.ui.ReaderHintController;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +45,7 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
                 "请输入自动切换章节的间隔秒数。",
                 "自动下一章",
                 Messages.getQuestionIcon(),
-                "90",
+                String.valueOf(ReaderSettingsService.getInstance().autoNextSeconds()),
                 null
         );
         int seconds = parseSeconds(secondsText);

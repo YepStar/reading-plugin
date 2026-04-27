@@ -7,6 +7,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.reader.jetbrains.parser.BookParser;
+import com.reader.jetbrains.settings.ReaderSettingsService;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +39,7 @@ final class ReaderActionUtil {
                 "请输入 TXT 文件编码。",
                 "文本编码",
                 Messages.getQuestionIcon(),
-                StandardCharsets.UTF_8.name(),
+                ReaderSettingsService.getInstance().defaultCharset(),
                 null
         );
         if (value == null || value.isBlank()) {
