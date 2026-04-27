@@ -24,7 +24,9 @@ public final class BookSource {
         copy.content = content.copy();
         copy.info = info.copy();
         copy.processor = new java.util.LinkedHashMap<>();
-        processor.forEach((key, value) -> copy.processor.put(key, value.copy()));
+        if (processor != null) {
+            processor.forEach((key, value) -> copy.processor.put(key, value.copy()));
+        }
         return copy;
     }
 

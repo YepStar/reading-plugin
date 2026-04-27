@@ -14,9 +14,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service(Service.Level.PROJECT)
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 public final class BookSourceService implements PersistentStateComponent<BookSourceService.StateData> {
     private static final String CONFIG_DIR = "book-source-config";
     private static final String SOURCE_LIST = CONFIG_DIR + "/sources.list";
+    private static final Set<String> MANAGED_SOURCE_IDS = Set.of("biquge", "kuwo", "xbiqugu", "xbiquzw");
 
     public static final class StateData {
         public List<BookSource> sources = new ArrayList<>();
@@ -128,8 +131,36 @@ public final class BookSourceService implements PersistentStateComponent<BookSou
     private void ensureDefaults() {
         if (state.sources == null || state.sources.isEmpty()) {
             resetDefaults();
+        } else {
+            syncConfiguredSources();
         }
         if (state.selectedSourceId == null || state.selectedSourceId.isBlank()) {
+            state.selectedSourceId = state.sources.get(0).id;
+        }
+    }
+
+    private void syncConfiguredSources() {
+        List<BookSource> configured = configuredSources();
+        if (configured.isEmpty()) {
+            return;
+        }
+        Set<String> configuredIds = new LinkedHashSet<>();
+        configured.forEach(source -> configuredIds.add(source.id));
+
+        List<BookSource> merged = new ArrayList<>(configured);
+        for (BookSource source : state.sources) {
+            if (configuredIds.contains(source.id)) {
+                continue;
+            }
+            if (MANAGED_SOURCE_IDS.contains(source.id)) {
+                continue;
+            }
+            merged.add(source);
+        }
+        state.sources = merged;
+        if (state.selectedSourceId == null
+                || state.selectedSourceId.isBlank()
+                || state.sources.stream().noneMatch(source -> source.id.equals(state.selectedSourceId))) {
             state.selectedSourceId = state.sources.get(0).id;
         }
     }
@@ -230,13 +261,15 @@ public final class BookSourceService implements PersistentStateComponent<BookSou
         info.put("coverField", source.info.coverField);
         map.put("info", info);
         Map<String, Object> processor = new LinkedHashMap<>();
-        source.processor.forEach((key, rule) -> {
-            Map<String, Object> ruleMap = new LinkedHashMap<>();
-            ruleMap.put("from", rule.from);
-            ruleMap.put("regex", rule.regex);
-            ruleMap.put("replace", rule.replace);
-            processor.put(key, ruleMap);
-        });
+        if (source.processor != null) {
+            source.processor.forEach((key, rule) -> {
+                Map<String, Object> ruleMap = new LinkedHashMap<>();
+                ruleMap.put("from", rule.from);
+                ruleMap.put("regex", rule.regex);
+                ruleMap.put("replace", rule.replace);
+                processor.put(key, ruleMap);
+            });
+        }
         map.put("processor", processor);
         return map;
     }

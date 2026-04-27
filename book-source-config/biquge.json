@@ -42,7 +42,7 @@
     },
     "itemId": {
       "from": "chapterTitle",
-      "regex": "^第(\\d+)章",
+      "regex": "^第(\\d+)章.*$",
       "replace": "$1"
     }
   }

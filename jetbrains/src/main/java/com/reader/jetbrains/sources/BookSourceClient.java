@@ -159,7 +159,7 @@ public final class BookSourceClient {
     }
 
     private static String processed(BookSource source, String key, Map<?, ?> values, String fallbackField) {
-        ProcessorRule rule = source.processor.get(key);
+        ProcessorRule rule = source.processor == null ? null : source.processor.get(key);
         String value = "";
         if (rule != null && rule.from != null && !rule.from.isBlank()) {
             value = value(values, rule.from);
