@@ -14,7 +14,6 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
         public int hintWidth = 420;
         public int hintHeight = 260;
         public int fontSize = 14;
-        public int lineHeightPercent = 170;
         public int horizontalPadding = 8;
         public int verticalPadding = 8;
         public int maxLineChars = 0;
@@ -53,10 +52,6 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
 
     public synchronized int maxLineChars() {
         return Math.max(0, Math.min(120, state.maxLineChars));
-    }
-
-    public synchronized int lineHeightPercent() {
-        return clamp(state.lineHeightPercent, 100, 300);
     }
 
     public synchronized int horizontalPadding() {

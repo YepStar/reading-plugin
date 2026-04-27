@@ -19,7 +19,6 @@ public final class ReaderSettingsConfigurable implements Configurable {
     private JSpinner hintWidth;
     private JSpinner hintHeight;
     private JSpinner fontSize;
-    private JSpinner lineHeightPercent;
     private JSpinner horizontalPadding;
     private JSpinner verticalPadding;
     private JSpinner maxLineChars;
@@ -39,7 +38,6 @@ public final class ReaderSettingsConfigurable implements Configurable {
         hintWidth = new JSpinner(new SpinnerNumberModel(state.hintWidth, 260, 1000, 10));
         hintHeight = new JSpinner(new SpinnerNumberModel(state.hintHeight, 160, 800, 10));
         fontSize = new JSpinner(new SpinnerNumberModel(state.fontSize, 10, 28, 1));
-        lineHeightPercent = new JSpinner(new SpinnerNumberModel(state.lineHeightPercent, 100, 300, 5));
         horizontalPadding = new JSpinner(new SpinnerNumberModel(state.horizontalPadding, 0, 80, 1));
         verticalPadding = new JSpinner(new SpinnerNumberModel(state.verticalPadding, 0, 80, 1));
         maxLineChars = new JSpinner(new SpinnerNumberModel(state.maxLineChars, 0, 120, 1));
@@ -53,7 +51,6 @@ public final class ReaderSettingsConfigurable implements Configurable {
                 .addLabeledComponent("提示层宽度", hintWidth)
                 .addLabeledComponent("提示层高度", hintHeight)
                 .addLabeledComponent("正文字号", fontSize)
-                .addLabeledComponent("正文行距（%）", lineHeightPercent)
                 .addLabeledComponent("左右间距（px）", horizontalPadding)
                 .addLabeledComponent("上下间距（px）", verticalPadding)
                 .addLabeledComponent("单行最大字数（0 为不限制）", maxLineChars)
@@ -72,7 +69,6 @@ public final class ReaderSettingsConfigurable implements Configurable {
         return intValue(hintWidth) != state.hintWidth
                 || intValue(hintHeight) != state.hintHeight
                 || intValue(fontSize) != state.fontSize
-                || intValue(lineHeightPercent) != state.lineHeightPercent
                 || intValue(horizontalPadding) != state.horizontalPadding
                 || intValue(verticalPadding) != state.verticalPadding
                 || intValue(maxLineChars) != state.maxLineChars
@@ -87,7 +83,6 @@ public final class ReaderSettingsConfigurable implements Configurable {
         state.hintWidth = intValue(hintWidth);
         state.hintHeight = intValue(hintHeight);
         state.fontSize = intValue(fontSize);
-        state.lineHeightPercent = intValue(lineHeightPercent);
         state.horizontalPadding = intValue(horizontalPadding);
         state.verticalPadding = intValue(verticalPadding);
         state.maxLineChars = intValue(maxLineChars);
@@ -102,7 +97,6 @@ public final class ReaderSettingsConfigurable implements Configurable {
         hintWidth.setValue(state.hintWidth);
         hintHeight.setValue(state.hintHeight);
         fontSize.setValue(state.fontSize);
-        lineHeightPercent.setValue(state.lineHeightPercent);
         horizontalPadding.setValue(state.horizontalPadding);
         verticalPadding.setValue(state.verticalPadding);
         maxLineChars.setValue(state.maxLineChars);

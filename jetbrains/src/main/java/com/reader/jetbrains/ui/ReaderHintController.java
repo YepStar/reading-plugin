@@ -72,7 +72,7 @@ public final class ReaderHintController {
         String maxWidth = settings.maxLineChars() <= 0 ? "" : "max-width: " + settings.maxLineChars() + "em;";
         return """
                 <html>
-                  <body style="font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; font-size: %dpx; line-height: %d%%; margin: %dpx %dpx; %s">
+                  <body style="font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; font-size: %dpx; margin: %dpx %dpx; %s">
                     <div style="font-size: 12px; color: #8a8f98; margin-bottom: 8px;">%s</div>
                     <h3 style="margin: 0 0 8px 0;">%s</h3>
                     <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: inherit; margin: 0;">%s</pre>
@@ -80,7 +80,6 @@ public final class ReaderHintController {
                 </html>
                 """.formatted(
                 settings.fontSize(),
-                settings.lineHeightPercent(),
                 settings.verticalPadding(),
                 settings.horizontalPadding(),
                 maxWidth,
