@@ -140,7 +140,7 @@ public final class BookSourceClient {
     private String get(String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .timeout(Duration.ofSeconds(20))
-                .header("User-Agent", "Mozilla/5.0 Reader-plugin-yip")
+                .header("User-Agent", "Mozilla/5.0 Reader Yip")
                 .header("Accept", "text/html,application/json,*/*")
                 .GET()
                 .build();

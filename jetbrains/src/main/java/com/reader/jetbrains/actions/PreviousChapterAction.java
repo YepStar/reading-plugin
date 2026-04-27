@@ -18,13 +18,13 @@ public final class PreviousChapterAction extends AnAction {
         }
         ReaderStateService state = project.getService(ReaderStateService.class);
         if (!state.previousChapter()) {
-            Messages.showInfoMessage(project, "已经是第一章。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "已经是第一章。", "Reader Yip");
             return;
         }
         try {
             RemoteChapterLoader.ensureLoaded(project, state.chapterIndex());
         } catch (Exception exception) {
-            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader Yip");
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);

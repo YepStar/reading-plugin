@@ -32,7 +32,7 @@ public final class SearchOnlineBookAction extends AnAction {
         BookSourceService sourceService = project.getService(BookSourceService.class);
         List<BookSource> sources = sourceService.enabledSources();
         if (sources.isEmpty()) {
-            Messages.showWarningDialog(project, "没有启用的书源，请先打开书源管理。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "没有启用的书源，请先打开书源管理。", "Reader Yip");
             return;
         }
 
@@ -58,11 +58,11 @@ public final class SearchOnlineBookAction extends AnAction {
             return;
         }
         if (data.error != null) {
-            Messages.showErrorDialog(project, "搜索失败：\n" + data.error.getMessage(), "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "搜索失败：\n" + data.error.getMessage(), "Reader Yip");
             return;
         }
         if (data.results.isEmpty()) {
-            Messages.showInfoMessage(project, "没有搜索到结果。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "没有搜索到结果。", "Reader Yip");
             return;
         }
 
@@ -83,11 +83,11 @@ public final class SearchOnlineBookAction extends AnAction {
             return;
         }
         if (data.error != null) {
-            Messages.showErrorDialog(project, "目录加载失败：\n" + data.error.getMessage(), "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "目录加载失败：\n" + data.error.getMessage(), "Reader Yip");
             return;
         }
         if (data.chapters.isEmpty()) {
-            Messages.showInfoMessage(project, "该书源没有返回目录。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "该书源没有返回目录。", "Reader Yip");
             return;
         }
 
@@ -109,25 +109,25 @@ public final class SearchOnlineBookAction extends AnAction {
             return;
         }
         if (data.error != null) {
-            Messages.showErrorDialog(project, "正文加载失败：\n" + data.error.getMessage(), "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "正文加载失败：\n" + data.error.getMessage(), "Reader Yip");
             return;
         }
         if (data.text == null || data.text.isBlank()) {
-            Messages.showWarningDialog(project, "正文接口已返回，但未解析到正文文本。请检查 content.dataPath。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "正文接口已返回，但未解析到正文文本。请检查 content.dataPath。", "Reader Yip");
             return;
         }
 
         ReaderStateService readerState = project.getService(ReaderStateService.class);
         readerState.loadRemote(source.id, result, chapters, chapterIndex, data.text);
         if (readerState.currentChapter() == null) {
-            Messages.showErrorDialog(project, "在线章节已请求，但没有写入阅读状态。", "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "在线章节已请求，但没有写入阅读状态。", "Reader Yip");
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);
         if (editor != null) {
             ReaderHintController.show(project, editor);
         } else {
-            Messages.showInfoMessage(project, "在线章节已导入。打开任意编辑器标签页后，可显示原生提示层。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "在线章节已导入。打开任意编辑器标签页后，可显示原生提示层。", "Reader Yip");
         }
     }
 

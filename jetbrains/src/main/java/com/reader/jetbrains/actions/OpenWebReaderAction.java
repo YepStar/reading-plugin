@@ -37,7 +37,7 @@ public final class OpenWebReaderAction extends AnAction {
                         if (editor != null) {
                             ReaderHintController.show(project, editor);
                         }
-                        Messages.showInfoMessage(project, "已导入 " + book.chapters().size() + " 个可读片段。", "Reader-plugin-yip");
+                        Messages.showInfoMessage(project, "已导入 " + book.chapters().size() + " 个可读片段。", "Reader Yip");
                     });
                 } catch (Exception exception) {
                     javax.swing.SwingUtilities.invokeLater(() ->

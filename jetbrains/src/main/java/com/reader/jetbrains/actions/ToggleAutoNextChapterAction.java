@@ -28,14 +28,14 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
         }
         ReaderStateService state = project.getService(ReaderStateService.class);
         if (state.chapters().isEmpty()) {
-            Messages.showWarningDialog(project, "当前没有已导入的书籍或网页正文。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "当前没有已导入的书籍或网页正文。", "Reader Yip");
             return;
         }
         ScheduledExecutorService running = EXECUTORS.remove(project);
         if (running != null) {
             running.shutdownNow();
             state.setAutoNextRunning(false);
-            Messages.showInfoMessage(project, "已停止自动下一章。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "已停止自动下一章。", "Reader Yip");
             return;
         }
 
@@ -64,7 +64,7 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
                 RemoteChapterLoader.ensureLoaded(project, state.chapterIndex());
             } catch (Exception exception) {
                 stop(project);
-                Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+                Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader Yip");
                 return;
             }
             Editor editor = ReaderActionUtil.editor(event, project);
@@ -72,7 +72,7 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
                 ReaderHintController.show(project, editor);
             }
         }), seconds, seconds, TimeUnit.SECONDS);
-        Messages.showInfoMessage(project, "已启动自动下一章。", "Reader-plugin-yip");
+        Messages.showInfoMessage(project, "已启动自动下一章。", "Reader Yip");
     }
 
     private static int parseSeconds(String secondsText) {

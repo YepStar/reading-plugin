@@ -47,7 +47,7 @@ final class ReaderActionUtil {
         try {
             return Charset.forName(value.trim());
         } catch (Exception ignored) {
-            Messages.showWarningDialog(project, "未知编码，将使用 UTF-8。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "未知编码，将使用 UTF-8。", "Reader Yip");
             return StandardCharsets.UTF_8;
         }
     }

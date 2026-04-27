@@ -26,7 +26,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JComponent panel = createPanel(project);
-        Content content = ContentFactory.getInstance().createContent(panel, "Reader-plugin-yip", false);
+        Content content = ContentFactory.getInstance().createContent(panel, "Reader Yip", false);
         toolWindow.getContentManager().addContent(content);
     }
 
@@ -57,7 +57,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
         row = addActionButton(project, actions, row, "书源管理", "reader.ManageBookSources");
 
         row = addSection(actions, row, "快捷键");
-        addText(actions, row++, "设置位置：Settings / Preferences > Keymap，搜索 Reader-plugin-yip。");
+        addText(actions, row++, "设置位置：Settings / Preferences > Keymap，搜索 Reader Yip。");
         addText(actions, row++, "默认快捷键：Alt+Shift+O/R/T/P/N/A/B/W/S/M。");
 
         root.add(actions, BorderLayout.NORTH);

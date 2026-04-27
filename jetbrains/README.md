@@ -1,4 +1,4 @@
-# Reader-plugin-yip for JetBrains
+# Reader Yip for JetBrains
 
 中文说明见仓库根目录 [README_zh.md](../README_zh.md)。
 
@@ -20,22 +20,22 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 
 ## How to Open
 
-- `View > Tool Windows > Reader-plugin-yip`
-- `Tools > Reader-plugin-yip`
-- Search actions with `Shift Shift`, then type `Reader-plugin-yip`
+- `View > Tool Windows > Reader Yip`
+- `Tools > Reader Yip`
+- Search actions with `Shift Shift`, then type `Reader Yip`
 
 ## Main Actions
 
-- `Reader-plugin-yip | 打开本地 TXT / EPUB`
-- `Reader-plugin-yip | 显示/隐藏原生提示层`
-- `Reader-plugin-yip | 打开目录`
-- `Reader-plugin-yip | 上一章`
-- `Reader-plugin-yip | 下一章`
-- `Reader-plugin-yip | 自动下一章 开/关`
-- `Reader-plugin-yip | 平台网页登录`
-- `Reader-plugin-yip | 网页正文提取`
-- `Reader-plugin-yip | 在线书源搜索`
-- `Reader-plugin-yip | 书源管理`
+- `Reader Yip | 打开本地 TXT / EPUB`
+- `Reader Yip | 显示/隐藏原生提示层`
+- `Reader Yip | 打开目录`
+- `Reader Yip | 上一章`
+- `Reader Yip | 下一章`
+- `Reader Yip | 自动下一章 开/关`
+- `Reader Yip | 平台网页登录`
+- `Reader Yip | 网页正文提取`
+- `Reader Yip | 在线书源搜索`
+- `Reader Yip | 书源管理`
 
 Default shortcuts are declared in `src/main/resources/META-INF/plugin.xml`.
 

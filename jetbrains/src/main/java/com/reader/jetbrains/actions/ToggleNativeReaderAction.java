@@ -24,18 +24,18 @@ public final class ToggleNativeReaderAction extends AnAction {
         }
 
         if (state.currentChapter() == null) {
-            Messages.showWarningDialog(project, "请先打开 TXT / EPUB 或网页正文。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "请先打开 TXT / EPUB 或网页正文。", "Reader Yip");
             return;
         }
         try {
             RemoteChapterLoader.ensureLoaded(project, state.chapterIndex());
         } catch (Exception exception) {
-            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader Yip");
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);
         if (editor == null) {
-            Messages.showWarningDialog(project, "请先打开任意编辑器标签页，再显示原生提示层。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "请先打开任意编辑器标签页，再显示原生提示层。", "Reader Yip");
             return;
         }
         ReaderHintController.show(project, editor);

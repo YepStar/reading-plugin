@@ -46,7 +46,7 @@ public final class OpenLocalBookAction extends AnAction {
             if (editor != null) {
                 ReaderHintController.show(project, editor);
             }
-            Messages.showInfoMessage(project, "已导入并保存阅读进度，共 " + book.chapters().size() + " 个章节。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "已导入并保存阅读进度，共 " + book.chapters().size() + " 个章节。", "Reader Yip");
         } catch (Exception exception) {
             Messages.showErrorDialog(project, exception.getMessage(), "导入本地书籍失败");
         }

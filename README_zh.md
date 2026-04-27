@@ -14,17 +14,17 @@
 
 安装并重启 WebStorm 后，有三种入口：
 
-1. 右侧工具窗口栏点击 `Reader-plugin-yip`。
-2. 菜单进入 `视图 > 工具窗口 > Reader-plugin-yip`。
-3. 菜单进入 `工具 > Reader-plugin-yip`，直接执行单个命令。
+1. 右侧工具窗口栏点击 `Reader Yip`。
+2. 菜单进入 `视图 > 工具窗口 > Reader Yip`。
+3. 菜单进入 `工具 > Reader Yip`，直接执行单个命令。
 
 如果看不到 `Reader` 工具窗口，先确认插件已启用：
 
-`Settings / Preferences > Plugins > Installed > Reader-plugin-yip`
+`Settings / Preferences > Plugins > Installed > Reader Yip`
 
 ## 操作面板
 
-`Reader-plugin-yip` 工具窗口里有这些按钮：
+`Reader Yip` 工具窗口里有这些按钮：
 
 - `打开 TXT / EPUB`：选择本地 `.txt` 或 `.epub` 文件。
 - `显示/隐藏原生提示层`：用同一个动作切换阅读浮层；如果之前导入过本地书籍，会按保存的文件路径、正则、章节和滚动位置恢复。
@@ -40,7 +40,7 @@
 ## 导入 TXT / EPUB
 
 1. 打开任意编辑器文件，保证当前有编辑器区域。
-2. 打开 `Reader-plugin-yip` 工具窗口。
+2. 打开 `Reader Yip` 工具窗口。
 3. 点击 `打开 TXT / EPUB`。
 4. 选择文件。
 5. 输入章节拆分正则。
@@ -139,7 +139,7 @@
 自定义快捷键：
 
 1. 打开 `Settings / Preferences > Keymap`。
-2. 搜索 `Reader-plugin-yip`。
+2. 搜索 `Reader Yip`。
 3. 找到对应动作，例如 `打开本地 TXT / EPUB`、`显示/隐藏原生提示层`。
 4. 右键动作，选择 `Add Keyboard Shortcut`。
 

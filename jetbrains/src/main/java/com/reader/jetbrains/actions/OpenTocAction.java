@@ -27,7 +27,7 @@ public final class OpenTocAction extends AnAction {
         ReaderStateService state = project.getService(ReaderStateService.class);
         List<Chapter> chapters = state.chapters();
         if (chapters.isEmpty()) {
-            Messages.showWarningDialog(project, "当前没有已导入的书籍或网页正文。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "当前没有已导入的书籍或网页正文。", "Reader Yip");
             return;
         }
 
@@ -52,7 +52,7 @@ public final class OpenTocAction extends AnAction {
         try {
             RemoteChapterLoader.ensureLoaded(project, index);
         } catch (Exception exception) {
-            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader Yip");
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);

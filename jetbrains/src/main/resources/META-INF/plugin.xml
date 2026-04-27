@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.reader.jetbrains</id>
-    <name>Reader-plugin-yip</name>
+    <name>Reader Yip</name>
     <version>0.1.0</version>
     <vendor>Reader</vendor>
     <idea-version since-build="242"/>
@@ -14,14 +14,14 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.reader.jetbrains.state.ReaderStateService"/>
         <projectService serviceImplementation="com.reader.jetbrains.sources.BookSourceService"/>
-        <toolWindow id="Reader-plugin-yip"
+        <toolWindow id="Reader Yip"
                     anchor="right"
                     icon="AllIcons.General.Balloon"
                     factoryClass="com.reader.jetbrains.ui.ReaderToolWindowFactory"/>
     </extensions>
 
     <actions>
-        <group id="reader.group.Main" text="Reader-plugin-yip" popup="true" icon="AllIcons.General.Balloon">
+        <group id="reader.group.Main" text="Reader Yip" popup="true" icon="AllIcons.General.Balloon">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </group>
 
@@ -105,7 +105,7 @@
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift M"/>
         </action>
 
-        <group id="reader.group.EditorPopup" text="Reader-plugin-yip" popup="true" icon="AllIcons.General.Balloon">
+        <group id="reader.group.EditorPopup" text="Reader Yip" popup="true" icon="AllIcons.General.Balloon">
             <reference id="reader.ToggleNativeReader"/>
             <reference id="reader.OpenToc"/>
             <separator/>

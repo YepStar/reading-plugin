@@ -40,7 +40,7 @@ public final class BrowserDialog extends DialogWrapper {
         super(project, false);
         this.project = project;
         this.initialUrl = url;
-        setTitle("Reader-plugin-yip 平台网页");
+        setTitle("Reader Yip 平台网页");
         setOKButtonText("关闭");
         init();
     }
@@ -119,7 +119,7 @@ public final class BrowserDialog extends DialogWrapper {
 
     private void importCurrentPage() {
         if (browser == null) {
-            Messages.showWarningDialog(project, "当前没有可导入的网页。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "当前没有可导入的网页。", "Reader Yip");
             return;
         }
 
@@ -138,7 +138,7 @@ public final class BrowserDialog extends DialogWrapper {
     private void importPayload(String payload) {
         String[] parts = payload == null ? new String[0] : payload.split("\\n", 3);
         if (parts.length < 3) {
-            Messages.showWarningDialog(project, "未能读取当前网页内容。", "Reader-plugin-yip");
+            Messages.showWarningDialog(project, "未能读取当前网页内容。", "Reader Yip");
             return;
         }
 
@@ -154,7 +154,7 @@ public final class BrowserDialog extends DialogWrapper {
             if (editor != null) {
                 ReaderHintController.show(project, editor);
             }
-            Messages.showInfoMessage(project, "已将当前网页导入原生提示层。", "Reader-plugin-yip");
+            Messages.showInfoMessage(project, "已将当前网页导入原生提示层。", "Reader Yip");
         } catch (Exception exception) {
             Messages.showErrorDialog(project, exception.getMessage(), "导入网页失败");
         }
