@@ -7,6 +7,10 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+
 @Service(Service.Level.APP)
 @State(name = "ReaderYipSettings", storages = @Storage("reader-yip-settings.xml"))
 public final class ReaderSettingsService implements PersistentStateComponent<ReaderSettingsService.StateData> {
@@ -20,6 +24,10 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
         public String defaultCharset = "UTF-8";
         public int autoNextSeconds = 90;
         public String platformBrowserMode = "popup";
+        public int platformPopupX = -1;
+        public int platformPopupY = -1;
+        public int platformPopupWidth = 520;
+        public int platformPopupHeight = 360;
     }
 
     private StateData state = new StateData();
@@ -72,6 +80,27 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
 
     public synchronized String platformBrowserMode() {
         return "dialog".equals(state.platformBrowserMode) ? "dialog" : "popup";
+    }
+
+    public synchronized Dimension platformPopupSize() {
+        return new Dimension(clamp(state.platformPopupWidth, 320, 2000), clamp(state.platformPopupHeight, 180, 1600));
+    }
+
+    public synchronized Point platformPopupLocation() {
+        if (state.platformPopupX < 0 || state.platformPopupY < 0) {
+            return null;
+        }
+        return new Point(state.platformPopupX, state.platformPopupY);
+    }
+
+    public synchronized void savePlatformPopupBounds(Rectangle bounds) {
+        if (bounds == null || bounds.width <= 0 || bounds.height <= 0) {
+            return;
+        }
+        state.platformPopupX = bounds.x;
+        state.platformPopupY = bounds.y;
+        state.platformPopupWidth = bounds.width;
+        state.platformPopupHeight = bounds.height;
     }
 
     private static int clamp(int value, int min, int max) {
