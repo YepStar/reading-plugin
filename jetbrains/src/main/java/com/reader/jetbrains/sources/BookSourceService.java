@@ -4,24 +4,38 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.project.Project;
 import com.reader.jetbrains.sources.json.SimpleJson;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service(Service.Level.PROJECT)
 @State(name = "ReaderBookSourceState", storages = @Storage("reader-book-sources.xml"))
 public final class BookSourceService implements PersistentStateComponent<BookSourceService.StateData> {
+    private static final String CONFIG_DIR = "book-source-config";
+    private static final String SOURCE_LIST = CONFIG_DIR + "/sources.list";
+
     public static final class StateData {
         public List<BookSource> sources = new ArrayList<>();
         public String selectedSourceId = "";
     }
 
+    private final Project project;
     private StateData state = new StateData();
+
+    public BookSourceService(Project project) {
+        this.project = project;
+    }
 
     public synchronized List<BookSource> sources() {
         ensureDefaults();
@@ -83,7 +97,7 @@ public final class BookSourceService implements PersistentStateComponent<BookSou
     }
 
     public synchronized void resetDefaults() {
-        state.sources = defaultSources();
+        state.sources = configuredSources();
         state.selectedSourceId = state.sources.isEmpty() ? "" : state.sources.get(0).id;
     }
 
@@ -120,89 +134,73 @@ public final class BookSourceService implements PersistentStateComponent<BookSou
         }
     }
 
-    private static List<BookSource> defaultSources() {
-        List<BookSource> sources = new ArrayList<>();
-        sources.add(htmlSource(
-                "xbiqugu",
-                "书香小说",
-                "http://www.xbiqugu.net/",
-                "http://www.xbiqugu.net/modules/article/waps.php?searchkey=${key}",
-                ".grid tr:not(:first-child)",
-                "a",
-                "a",
-                "${bookUrl}",
-                "#list dl dd",
-                "a",
-                "a",
-                "${chapterUrl}",
-                "#content"
-        ));
-        sources.add(htmlSource(
-                "xbiquzw",
-                "笔尖小说",
-                "http://www.xbiquzw.com/",
-                "http://www.xbiquzw.com/modules/article/soshu.php?searchkey=${key}",
-                ".grid tr:not(:first-child)",
-                "a",
-                "a",
-                "${bookUrl}",
-                "#list dl dd",
-                "a",
-                "a",
-                "${chapterUrl}",
-                "#content"
-        ));
-        BookSource kuwo = new BookSource();
-        kuwo.id = "kuwo";
-        kuwo.name = "酷我小说";
-        kuwo.type = "json";
-        kuwo.baseUrl = "http://appi.kuwo.cn/";
-        kuwo.search.url = "http://appi.kuwo.cn/novels/api/book/search?keyword=${key}&pi=${page}&ps=30";
-        kuwo.search.dataPath = "$.data[*]";
-        kuwo.info.bookIdField = "book_id";
-        kuwo.info.titleField = "title";
-        kuwo.info.authorField = "author_name";
-        kuwo.info.descField = "intro";
-        kuwo.info.coverField = "cover_url";
-        kuwo.catalog.url = "http://appi.kuwo.cn/novels/api/book/${bookId}/chapters?paging=0";
-        kuwo.catalog.dataPath = "$.data[*]";
-        kuwo.catalog.itemIdField = "chapter_id";
-        kuwo.catalog.itemTitleField = "chapter_title";
-        kuwo.content.url = "http://appi.kuwo.cn/novels/api/book/${bookId}/chapters/${itemId}";
-        kuwo.content.dataPath = "$.data.content";
-        sources.add(kuwo);
-        return sources;
+    private List<BookSource> configuredSources() {
+        List<BookSource> sources = loadProjectConfigSources();
+        if (!sources.isEmpty()) {
+            return sources;
+        }
+        sources = loadBundledConfigSources();
+        if (!sources.isEmpty()) {
+            return sources;
+        }
+        BookSource fallback = new BookSource();
+        fallback.id = "empty";
+        fallback.name = "未找到书源配置";
+        fallback.enabled = false;
+        return new ArrayList<>(List.of(fallback));
     }
 
-    private static BookSource htmlSource(String id,
-                                         String name,
-                                         String baseUrl,
-                                         String searchUrl,
-                                         String searchList,
-                                         String searchTitle,
-                                         String searchHref,
-                                         String catalogUrl,
-                                         String catalogList,
-                                         String catalogTitle,
-                                         String catalogHref,
-                                         String contentUrl,
-                                         String contentSelector) {
-        BookSource source = new BookSource();
-        source.id = id;
-        source.name = name;
-        source.type = "html";
-        source.baseUrl = baseUrl;
-        source.search.url = searchUrl;
-        source.search.listSelector = searchList;
-        source.search.titleSelector = searchTitle;
-        source.search.urlSelector = searchHref;
-        source.catalog.url = catalogUrl;
-        source.catalog.listSelector = catalogList;
-        source.catalog.titleSelector = catalogTitle;
-        source.catalog.urlSelector = catalogHref;
-        source.content.url = contentUrl;
-        source.content.selector = contentSelector;
-        return source;
+    private List<BookSource> loadProjectConfigSources() {
+        String basePath = project.getBasePath();
+        if (basePath == null || basePath.isBlank()) {
+            return List.of();
+        }
+        Path dir = Path.of(basePath, CONFIG_DIR);
+        if (!Files.isDirectory(dir)) {
+            return List.of();
+        }
+        try (Stream<Path> paths = Files.list(dir)) {
+            return paths
+                    .filter(path -> path.getFileName().toString().endsWith(".json"))
+                    .sorted()
+                    .map(this::readSource)
+                    .flatMap(Optional::stream)
+                    .toList();
+        } catch (Exception ignored) {
+            return List.of();
+        }
+    }
+
+    private Optional<BookSource> readSource(Path path) {
+        try {
+            return Optional.of(fromJson(Files.readString(path, StandardCharsets.UTF_8)));
+        } catch (Exception ignored) {
+            return Optional.empty();
+        }
+    }
+
+    private List<BookSource> loadBundledConfigSources() {
+        try (InputStream stream = BookSourceService.class.getClassLoader().getResourceAsStream(SOURCE_LIST)) {
+            if (stream == null) {
+                return List.of();
+            }
+            String list = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+            List<BookSource> sources = new ArrayList<>();
+            for (String line : list.split("\\R")) {
+                String fileName = line.trim();
+                if (fileName.isBlank() || fileName.startsWith("#")) {
+                    continue;
+                }
+                try (InputStream sourceStream = BookSourceService.class.getClassLoader().getResourceAsStream(CONFIG_DIR + "/" + fileName)) {
+                    if (sourceStream != null) {
+                        sources.add(fromJson(new String(sourceStream.readAllBytes(), StandardCharsets.UTF_8)));
+                    }
+                }
+            }
+            return sources;
+        } catch (Exception ignored) {
+            return List.of();
+        }
     }
 
     private static Map<String, Object> toMap(BookSource source) {
@@ -231,6 +229,15 @@ public final class BookSourceService implements PersistentStateComponent<BookSou
         info.put("urlField", source.info.urlField);
         info.put("coverField", source.info.coverField);
         map.put("info", info);
+        Map<String, Object> processor = new LinkedHashMap<>();
+        source.processor.forEach((key, rule) -> {
+            Map<String, Object> ruleMap = new LinkedHashMap<>();
+            ruleMap.put("from", rule.from);
+            ruleMap.put("regex", rule.regex);
+            ruleMap.put("replace", rule.replace);
+            processor.put(key, ruleMap);
+        });
+        map.put("processor", processor);
         return map;
     }
 
@@ -270,6 +277,17 @@ public final class BookSourceService implements PersistentStateComponent<BookSou
             source.info.descField = text(info.get("descField"));
             source.info.urlField = text(info.get("urlField"));
             source.info.coverField = text(info.get("coverField"));
+        }
+        if (map.get("processor") instanceof Map<?, ?> processor) {
+            processor.forEach((key, value) -> {
+                if (value instanceof Map<?, ?> processorMap) {
+                    ProcessorRule rule = new ProcessorRule();
+                    rule.from = text(processorMap.get("from"));
+                    rule.regex = text(processorMap.get("regex"));
+                    rule.replace = processorMap.containsKey("replace") ? text(processorMap.get("replace")) : "$1";
+                    source.processor.put(String.valueOf(key), rule);
+                }
+            });
         }
         return source;
     }

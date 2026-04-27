@@ -1,0 +1,38 @@
+{
+  "id": "xbiquzw",
+  "name": "笔尖小说",
+  "type": "html",
+  "baseUrl": "http://www.xbiquzw.com/",
+  "enabled": true,
+  "search": {
+    "url": "http://www.xbiquzw.com/modules/article/soshu.php?searchkey=${key}",
+    "dataPath": "",
+    "listSelector": ".grid tr:not(:first-child)",
+    "titleSelector": "a",
+    "urlSelector": "a"
+  },
+  "catalog": {
+    "url": "${bookUrl}",
+    "dataPath": "",
+    "listSelector": "#list dl dd",
+    "titleSelector": "a",
+    "urlSelector": "a",
+    "itemIdField": "",
+    "itemTitleField": "",
+    "itemUrlField": ""
+  },
+  "content": {
+    "url": "${chapterUrl}",
+    "dataPath": "",
+    "selector": "#content"
+  },
+  "info": {
+    "bookIdField": "",
+    "titleField": "",
+    "authorField": "",
+    "descField": "",
+    "urlField": "",
+    "coverField": ""
+  },
+  "processor": {}
+}

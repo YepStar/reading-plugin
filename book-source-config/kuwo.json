@@ -1,0 +1,38 @@
+{
+  "id": "kuwo",
+  "name": "酷我小说",
+  "type": "json",
+  "baseUrl": "http://appi.kuwo.cn/",
+  "enabled": true,
+  "search": {
+    "url": "http://appi.kuwo.cn/novels/api/book/search?keyword=${key}&pi=${page}&ps=30",
+    "dataPath": "$.data[*]",
+    "listSelector": "",
+    "titleSelector": "",
+    "urlSelector": ""
+  },
+  "catalog": {
+    "url": "http://appi.kuwo.cn/novels/api/book/${bookId}/chapters?paging=0",
+    "dataPath": "$.data[*]",
+    "listSelector": "",
+    "titleSelector": "",
+    "urlSelector": "",
+    "itemIdField": "chapter_id",
+    "itemTitleField": "chapter_title",
+    "itemUrlField": ""
+  },
+  "content": {
+    "url": "http://appi.kuwo.cn/novels/api/book/${bookId}/chapters/${itemId}",
+    "dataPath": "$.data.content",
+    "selector": ""
+  },
+  "info": {
+    "bookIdField": "book_id",
+    "titleField": "title",
+    "authorField": "author_name",
+    "descField": "intro",
+    "urlField": "",
+    "coverField": "cover_url"
+  },
+  "processor": {}
+}

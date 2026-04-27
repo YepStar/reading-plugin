@@ -96,8 +96,9 @@
 4. 选择目录中的章节。
 5. 插件会加载正文并显示在编辑器内原生提示层。
 
-当前内置书源来自 W-Reader 配置中不依赖自定义脚本或加密处理的稳定子集：
+当前内置书源统一维护在仓库根目录 `book-source-config/` 下，并会随插件一起打包。当前包含：
 
+- 笔趣阁
 - 书香小说
 - 笔尖小说
 - 酷我小说
@@ -115,7 +116,7 @@
 - 删除书源
 - 重置内置书源
 
-书源配置保存在当前项目的 `reader-book-sources.xml` 中。JSON 字段包括 `search`、`catalog`、`content`、`info` 四组规则。当前版本支持通用 HTML 链接列表和 JSON 数据路径；W-Reader 中依赖自定义 Java 脚本、AES 解密或多页拼接的高级书源暂未执行脚本。
+内置书源配置文件位于 `book-source-config/`。项目内通过 `书源管理` 修改后的书源仍会保存到当前项目的 `reader-book-sources.xml` 中。JSON 字段包括 `search`、`catalog`、`content`、`info`、`processor` 规则。详细格式见 `book-source-config/README_zh.md`。
 
 ## 快捷键
 
@@ -147,5 +148,5 @@
 - 当前版本是 JetBrains 插件原型，不是最终发布版。
 - 平台网页登录模式会保存最后访问页面，并支持把当前阅读页导入原生提示层，但不会自动同步完整书架。
 - 网页正文提取基于通用规则，复杂站点可能需要后续增加站点适配规则。
-- 在线书源已支持 W-Reader 默认书源中的 HTML/JSON 规则子集；依赖站点自定义脚本、加密解密的源需要后续单独适配。
+- 在线书源已支持 W-Reader 默认书源中的 HTML/JSON 规则子集和基础 processor；依赖站点自定义脚本、加密解密的源需要后续单独适配。
 - EPUB 解析当前使用内部 HTML 文件顺序，不解析完整 OPF spine 元数据。

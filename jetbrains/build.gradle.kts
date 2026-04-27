@@ -42,3 +42,9 @@ dependencies {
         instrumentationTools()
     }
 }
+
+tasks.processResources {
+    from("../book-source-config") {
+        into("book-source-config")
+    }
+}

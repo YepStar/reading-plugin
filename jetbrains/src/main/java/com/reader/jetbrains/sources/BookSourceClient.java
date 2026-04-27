@@ -56,11 +56,17 @@ public final class BookSourceClient {
         }
         List<SearchResult> results = new ArrayList<>();
         for (Object item : list) {
-            if (!(item instanceof Map<?, ?>)) {
+            if (!(item instanceof Map<?, ?> map)) {
                 continue;
             }
-            String bookId = SimpleJson.stringField(item, source.info.bookIdField);
-            String title = SimpleJson.stringField(item, source.info.titleField);
+            String bookId = processed(source, "bookId", map, source.info.bookIdField);
+            String title = firstNonBlank(
+                    SimpleJson.stringField(item, source.info.titleField),
+                    SimpleJson.stringField(item, "articlename"),
+                    SimpleJson.stringField(item, "book_name"),
+                    SimpleJson.stringField(item, "name"),
+                    SimpleJson.stringField(item, "title")
+            );
             String author = SimpleJson.stringField(item, source.info.authorField);
             String desc = SimpleJson.stringField(item, source.info.descField);
             String url = SimpleJson.stringField(item, source.info.urlField);
@@ -89,8 +95,18 @@ public final class BookSourceClient {
         }
         List<RemoteChapter> chapters = new ArrayList<>();
         for (Object item : list) {
-            String itemId = SimpleJson.stringField(item, source.catalog.itemIdField);
-            String title = SimpleJson.stringField(item, source.catalog.itemTitleField);
+            if (!(item instanceof Map<?, ?> map)) {
+                continue;
+            }
+            String title = firstNonBlank(
+                    SimpleJson.stringField(item, source.catalog.itemTitleField),
+                    SimpleJson.stringField(item, "chapter_title"),
+                    SimpleJson.stringField(item, "chaptername"),
+                    SimpleJson.stringField(item, "chapterTitle"),
+                    SimpleJson.stringField(item, "title"),
+                    SimpleJson.stringField(item, "name")
+            );
+            String itemId = processed(source, "itemId", map, source.catalog.itemIdField);
             String url = source.catalog.itemUrlField == null || source.catalog.itemUrlField.isBlank()
                     ? ""
                     : SimpleJson.stringField(item, source.catalog.itemUrlField);
@@ -131,6 +147,56 @@ public final class BookSourceClient {
         rendered = rendered.replace("${itemId}", encode(chapter == null ? "" : chapter.itemId));
         rendered = rendered.replace("${chapterUrl}", chapter == null ? "" : chapter.url);
         return absolute(source.baseUrl, rendered);
+    }
+
+    private static String processed(BookSource source, String key, Map<?, ?> values, String fallbackField) {
+        ProcessorRule rule = source.processor.get(key);
+        String value = "";
+        if (rule != null && rule.from != null && !rule.from.isBlank()) {
+            value = value(values, rule.from);
+        }
+        if (value.isBlank()) {
+            value = value(values, fallbackField);
+        }
+        if (rule == null || rule.regex == null || rule.regex.isBlank()) {
+            return value;
+        }
+        return value.replaceFirst(rule.regex, rule.replace == null || rule.replace.isBlank() ? "$1" : rule.replace);
+    }
+
+    private static String value(Map<?, ?> values, String key) {
+        if (key == null || key.isBlank()) {
+            return "";
+        }
+        Object direct = values.get(key);
+        if (direct != null) {
+            return String.valueOf(direct);
+        }
+        return switch (key) {
+            case "chapterTitle" -> firstNonBlank(
+                    string(values, "chapterTitle"),
+                    string(values, "chapter_title"),
+                    string(values, "chaptername"),
+                    string(values, "title"),
+                    string(values, "name")
+            );
+            case "chapterUrl" -> firstNonBlank(string(values, "url"), string(values, "chapter_url"), string(values, "chapterurl"));
+            default -> "";
+        };
+    }
+
+    private static String string(Map<?, ?> values, String key) {
+        Object value = values.get(key);
+        return value == null ? "" : String.valueOf(value);
+    }
+
+    private static String firstNonBlank(String... values) {
+        for (String value : values) {
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return "";
     }
 
     private static String encode(String value) {

@@ -13,7 +13,7 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 - Move to the next chapter manually or on an automatic timer.
 - Open login-capable platform pages in an embedded JCEF browser.
 - Open a third-party novel web page and extract likely article text into the reader.
-- Search online book sources inspired by W-Reader defaults.
+- Search online book sources loaded from the repository-level `book-source-config/` directory.
 - Manage online sources with JSON edit, enable/disable, delete, reset, and default selection.
 - A `Reader` tool window panel with the main actions.
 

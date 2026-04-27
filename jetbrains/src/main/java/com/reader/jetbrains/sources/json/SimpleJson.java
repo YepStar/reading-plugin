@@ -26,6 +26,9 @@ public final class SimpleJson {
         }
         Object current = root;
         String expression = path.trim();
+        if ("$[*]".equals(expression)) {
+            return root;
+        }
         if (expression.startsWith("$.")) {
             expression = expression.substring(2);
         }

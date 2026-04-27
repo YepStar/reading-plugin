@@ -10,6 +10,7 @@ public final class BookSource {
     public CatalogRule catalog = new CatalogRule();
     public ContentRule content = new ContentRule();
     public BookInfoRule info = new BookInfoRule();
+    public java.util.Map<String, ProcessorRule> processor = new java.util.LinkedHashMap<>();
 
     public BookSource copy() {
         BookSource copy = new BookSource();
@@ -22,6 +23,8 @@ public final class BookSource {
         copy.catalog = catalog.copy();
         copy.content = content.copy();
         copy.info = info.copy();
+        copy.processor = new java.util.LinkedHashMap<>();
+        processor.forEach((key, value) -> copy.processor.put(key, value.copy()));
         return copy;
     }
 
