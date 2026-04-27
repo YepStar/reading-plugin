@@ -60,6 +60,13 @@ public final class ToggleAutoNextChapterAction extends AnAction implements Dispo
                 stop(project);
                 return;
             }
+            try {
+                RemoteChapterLoader.ensureLoaded(project, state.chapterIndex());
+            } catch (Exception exception) {
+                stop(project);
+                Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+                return;
+            }
             Editor editor = ReaderActionUtil.editor(event, project);
             if (editor != null) {
                 ReaderHintController.show(project, editor);

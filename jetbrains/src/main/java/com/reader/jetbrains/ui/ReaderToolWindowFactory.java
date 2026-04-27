@@ -44,6 +44,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
 
         row = addSection(actions, row, "章节控制");
         row = addActionButton(project, actions, row, "打开目录", "reader.OpenToc");
+        row = addActionButton(project, actions, row, "上一章", "reader.PreviousChapter");
         row = addActionButton(project, actions, row, "下一章", "reader.NextChapter");
         row = addActionButton(project, actions, row, "自动下一章 开/关", "reader.ToggleAutoNextChapter");
 
@@ -57,7 +58,7 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
 
         row = addSection(actions, row, "快捷键");
         addText(actions, row++, "设置位置：Settings / Preferences > Keymap，搜索 Reader-plugin-yip。");
-        addText(actions, row++, "默认快捷键：Alt+Shift+O/R/T/N/A/B/W/S/M。");
+        addText(actions, row++, "默认快捷键：Alt+Shift+O/R/T/P/N/A/B/W/S/M。");
 
         root.add(actions, BorderLayout.NORTH);
         return root;

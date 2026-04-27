@@ -9,22 +9,16 @@ import com.reader.jetbrains.state.ReaderStateService;
 import com.reader.jetbrains.ui.ReaderHintController;
 import org.jetbrains.annotations.NotNull;
 
-public final class ToggleNativeReaderAction extends AnAction {
+public final class PreviousChapterAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         Project project = event.getProject();
         if (project == null) {
             return;
         }
-
         ReaderStateService state = project.getService(ReaderStateService.class);
-        if (state.hintVisible()) {
-            ReaderHintController.hide(project);
-            return;
-        }
-
-        if (state.currentChapter() == null) {
-            Messages.showWarningDialog(project, "请先打开 TXT / EPUB 或网页正文。", "Reader-plugin-yip");
+        if (!state.previousChapter()) {
+            Messages.showInfoMessage(project, "已经是第一章。", "Reader-plugin-yip");
             return;
         }
         try {
@@ -34,10 +28,8 @@ public final class ToggleNativeReaderAction extends AnAction {
             return;
         }
         Editor editor = ReaderActionUtil.editor(event, project);
-        if (editor == null) {
-            Messages.showWarningDialog(project, "请先打开任意编辑器标签页，再显示原生提示层。", "Reader-plugin-yip");
-            return;
+        if (editor != null) {
+            ReaderHintController.show(project, editor);
         }
-        ReaderHintController.show(project, editor);
     }
 }

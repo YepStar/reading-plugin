@@ -11,6 +11,7 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 - Jump through a table of contents.
 - Show/hide a JetBrains-native editor hint reader.
 - Move to the next chapter manually or on an automatic timer.
+- Move to the previous chapter.
 - Open login-capable platform pages in an embedded JCEF browser.
 - Open a third-party novel web page and extract likely article text into the reader.
 - Search online book sources loaded from the repository-level `book-source-config/` directory.
@@ -28,6 +29,7 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 - `Reader-plugin-yip | 打开本地 TXT / EPUB`
 - `Reader-plugin-yip | 显示/隐藏原生提示层`
 - `Reader-plugin-yip | 打开目录`
+- `Reader-plugin-yip | 上一章`
 - `Reader-plugin-yip | 下一章`
 - `Reader-plugin-yip | 自动下一章 开/关`
 - `Reader-plugin-yip | 平台网页登录`
