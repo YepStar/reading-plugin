@@ -2,6 +2,7 @@ package com.reader.jetbrains.ui;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -38,6 +39,9 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
         actions.setOpaque(false);
 
         int row = 0;
+        row = addSection(actions, row, "设置");
+        row = addSettingsButton(project, actions, row);
+
         row = addSection(actions, row, "导入与阅读");
         row = addActionButton(project, actions, row, "打开 TXT / EPUB", "reader.OpenLocalBook");
         row = addActionButton(project, actions, row, "显示/隐藏原生提示层", "reader.ToggleNativeReader");
@@ -82,6 +86,16 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
                 ActionManager.getInstance().tryToExecute(action, null, button, "ReaderToolWindow", true);
             }
         });
+        GridBagConstraints constraints = constraints(row);
+        constraints.insets = JBUI.insets(0, 0, 6, 0);
+        panel.add(button, constraints);
+        return row + 1;
+    }
+
+    private static int addSettingsButton(Project project, JPanel panel, int row) {
+        JButton button = new JButton("打开 Reader Yip 设置");
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.addActionListener(event -> ShowSettingsUtil.getInstance().showSettingsDialog(project, "Reader Yip"));
         GridBagConstraints constraints = constraints(row);
         constraints.insets = JBUI.insets(0, 0, 6, 0);
         panel.add(button, constraints);
