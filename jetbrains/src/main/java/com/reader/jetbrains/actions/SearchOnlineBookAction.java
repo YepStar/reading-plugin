@@ -5,7 +5,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.ui.JBUI;
 import com.reader.jetbrains.sources.BookSource;
 import com.reader.jetbrains.sources.BookSourceClient;
 import com.reader.jetbrains.sources.BookSourceService;
@@ -15,6 +19,7 @@ import com.reader.jetbrains.state.ReaderStateService;
 import com.reader.jetbrains.ui.ReaderHintController;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.Dimension;
 import java.util.List;
 
 public final class SearchOnlineBookAction extends AnAction {
@@ -91,6 +96,7 @@ public final class SearchOnlineBookAction extends AnAction {
             return;
         }
         int chapterIndex = data.chapters.indexOf(chapter);
+        List<RemoteChapter> chapters = data.chapters;
         data.clear();
         ok = ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
             try {
@@ -106,11 +112,22 @@ public final class SearchOnlineBookAction extends AnAction {
             Messages.showErrorDialog(project, "正文加载失败：\n" + data.error.getMessage(), "Reader-plugin-yip");
             return;
         }
+        if (data.text == null || data.text.isBlank()) {
+            Messages.showWarningDialog(project, "正文接口已返回，但未解析到正文文本。请检查 content.dataPath。", "Reader-plugin-yip");
+            return;
+        }
 
-        project.getService(ReaderStateService.class).loadRemote(source.id, result, data.chapters, chapterIndex, data.text);
+        ReaderStateService readerState = project.getService(ReaderStateService.class);
+        readerState.loadRemote(source.id, result, chapters, chapterIndex, data.text);
+        if (readerState.currentChapter() == null) {
+            Messages.showErrorDialog(project, "在线章节已请求，但没有写入阅读状态。", "Reader-plugin-yip");
+            return;
+        }
         Editor editor = ReaderActionUtil.editor(event, project);
         if (editor != null) {
             ReaderHintController.show(project, editor);
+        } else {
+            Messages.showInfoMessage(project, "在线章节已导入。打开任意编辑器标签页后，可显示原生提示层。", "Reader-plugin-yip");
         }
     }
 
@@ -127,12 +144,22 @@ public final class SearchOnlineBookAction extends AnAction {
     }
 
     private static <T> T choose(Project project, String title, List<T> values) {
-        String[] labels = values.stream().map(Object::toString).toArray(String[]::new);
-        int choice = Messages.showChooseDialog(project, title + "：", title, Messages.getQuestionIcon(), labels, labels[0]);
-        if (choice < 0) {
+        JBList<T> list = new JBList<>(values);
+        list.setSelectedIndex(0);
+        list.ensureIndexIsVisible(0);
+        list.setBorder(JBUI.Borders.empty());
+        JBScrollPane scrollPane = new JBScrollPane(list);
+        scrollPane.setPreferredSize(new Dimension(520, 560));
+
+        DialogBuilder builder = new DialogBuilder(project);
+        builder.setTitle(title);
+        builder.setCenterPanel(scrollPane);
+        builder.setOkActionEnabled(true);
+        if (!builder.showAndGet()) {
             return null;
         }
-        return values.get(choice);
+        int index = list.getSelectedIndex();
+        return index < 0 ? null : values.get(index);
     }
 
     private static final class SearchData {
