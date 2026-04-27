@@ -21,6 +21,12 @@ public final class NextChapterAction extends AnAction {
             Messages.showInfoMessage(project, "已经是最后一章。", "Reader-plugin-yip");
             return;
         }
+        try {
+            RemoteChapterLoader.ensureLoaded(project, state.chapterIndex());
+        } catch (Exception exception) {
+            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+            return;
+        }
         Editor editor = ReaderActionUtil.editor(event, project);
         if (editor != null) {
             ReaderHintController.show(project, editor);

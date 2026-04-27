@@ -7,12 +7,15 @@ import com.intellij.openapi.components.Storage;
 import com.reader.jetbrains.model.Book;
 import com.reader.jetbrains.model.Chapter;
 import com.reader.jetbrains.parser.BookParser;
+import com.reader.jetbrains.sources.RemoteChapter;
+import com.reader.jetbrains.sources.SearchResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service(Service.Level.PROJECT)
@@ -29,12 +32,37 @@ public final class ReaderStateService implements PersistentStateComponent<Reader
 
     private StateData state = new StateData();
     private Book book;
+    private String remoteSourceId = "";
+    private SearchResult remoteBook;
+    private List<RemoteChapter> remoteChapters = List.of();
     private boolean hintVisible;
     private boolean autoNextRunning;
 
     public synchronized void load(Book book) {
         this.book = book;
+        this.remoteSourceId = "";
+        this.remoteBook = null;
+        this.remoteChapters = List.of();
         state.chapterIndex = 0;
+        state.hintScrollValue = 0;
+    }
+
+    public synchronized void loadRemote(String sourceId,
+                                        SearchResult remoteBook,
+                                        List<RemoteChapter> chapters,
+                                        int chapterIndex,
+                                        String chapterText) {
+        this.remoteSourceId = sourceId == null ? "" : sourceId;
+        this.remoteBook = remoteBook;
+        this.remoteChapters = List.copyOf(chapters);
+        List<Chapter> localChapters = new ArrayList<>();
+        for (int i = 0; i < chapters.size(); i++) {
+            RemoteChapter chapter = chapters.get(i);
+            String text = i == chapterIndex ? chapterText : "";
+            localChapters.add(new Chapter(chapter.title, text));
+        }
+        this.book = new Book(remoteBook == null ? "在线小说" : remoteBook.title, localChapters);
+        state.chapterIndex = Math.max(0, Math.min(chapterIndex, Math.max(0, chapters.size() - 1)));
         state.hintScrollValue = 0;
     }
 
@@ -97,6 +125,39 @@ public final class ReaderStateService implements PersistentStateComponent<Reader
         state.chapterIndex++;
         state.hintScrollValue = 0;
         return true;
+    }
+
+    public synchronized boolean isRemoteChapterMissing(int index) {
+        return remoteBook != null
+                && index >= 0
+                && book != null
+                && index < book.chapters().size()
+                && book.chapters().get(index).text().isBlank();
+    }
+
+    public synchronized String remoteSourceId() {
+        return remoteSourceId;
+    }
+
+    public synchronized SearchResult remoteBook() {
+        return remoteBook;
+    }
+
+    public synchronized RemoteChapter remoteChapter(int index) {
+        if (index < 0 || index >= remoteChapters.size()) {
+            return null;
+        }
+        return remoteChapters.get(index);
+    }
+
+    public synchronized void replaceChapterText(int index, String text) {
+        if (book == null || index < 0 || index >= book.chapters().size()) {
+            return;
+        }
+        List<Chapter> chapters = new ArrayList<>(book.chapters());
+        Chapter old = chapters.get(index);
+        chapters.set(index, new Chapter(old.title(), text));
+        book = new Book(book.title(), chapters);
     }
 
     public synchronized int hintScrollValue() {

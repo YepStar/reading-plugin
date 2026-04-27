@@ -13,6 +13,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.reader.jetbrains.state.ReaderStateService"/>
+        <projectService serviceImplementation="com.reader.jetbrains.sources.BookSourceService"/>
         <toolWindow id="Reader-plugin-yip"
                     anchor="right"
                     icon="AllIcons.General.Balloon"
@@ -80,6 +81,22 @@
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift W"/>
         </action>
 
+        <action id="reader.SearchOnlineBook"
+                class="com.reader.jetbrains.actions.SearchOnlineBookAction"
+                text="在线书源搜索"
+                description="使用内置或自定义书源搜索小说并导入原生提示层"
+                icon="AllIcons.Actions.Search">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift S"/>
+        </action>
+
+        <action id="reader.ManageBookSources"
+                class="com.reader.jetbrains.actions.ManageBookSourcesAction"
+                text="书源管理"
+                description="启用、编辑、删除、重置在线小说书源"
+                icon="AllIcons.General.Settings">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift M"/>
+        </action>
+
         <group id="reader.group.EditorPopup" text="Reader-plugin-yip" popup="true" icon="AllIcons.General.Balloon">
             <reference id="reader.ToggleNativeReader"/>
             <reference id="reader.OpenToc"/>
@@ -88,6 +105,8 @@
             <reference id="reader.ToggleAutoNextChapter"/>
             <separator/>
             <reference id="reader.OpenLocalBook"/>
+            <reference id="reader.SearchOnlineBook"/>
+            <reference id="reader.ManageBookSources"/>
             <reference id="reader.OpenPlatformBrowser"/>
             <reference id="reader.OpenWebReader"/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
@@ -102,6 +121,9 @@
             <separator/>
             <reference id="reader.OpenPlatformBrowser"/>
             <reference id="reader.OpenWebReader"/>
+            <separator/>
+            <reference id="reader.SearchOnlineBook"/>
+            <reference id="reader.ManageBookSources"/>
             <add-to-group group-id="reader.group.Main"/>
         </group>
     </actions>

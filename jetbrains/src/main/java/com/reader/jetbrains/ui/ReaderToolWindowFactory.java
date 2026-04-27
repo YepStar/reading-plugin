@@ -51,9 +51,13 @@ public final class ReaderToolWindowFactory implements ToolWindowFactory, DumbAwa
         row = addActionButton(project, actions, row, "平台网页登录", "reader.OpenPlatformBrowser");
         row = addActionButton(project, actions, row, "网页正文提取", "reader.OpenWebReader");
 
+        row = addSection(actions, row, "在线书源");
+        row = addActionButton(project, actions, row, "在线书源搜索", "reader.SearchOnlineBook");
+        row = addActionButton(project, actions, row, "书源管理", "reader.ManageBookSources");
+
         row = addSection(actions, row, "快捷键");
         addText(actions, row++, "设置位置：Settings / Preferences > Keymap，搜索 Reader-plugin-yip。");
-        addText(actions, row++, "默认快捷键：Alt+Shift+O/R/T/N/A/B/W。");
+        addText(actions, row++, "默认快捷键：Alt+Shift+O/R/T/N/A/B/W/S/M。");
 
         root.add(actions, BorderLayout.NORTH);
         return root;

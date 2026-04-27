@@ -13,6 +13,8 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 - Move to the next chapter manually or on an automatic timer.
 - Open login-capable platform pages in an embedded JCEF browser.
 - Open a third-party novel web page and extract likely article text into the reader.
+- Search online book sources inspired by W-Reader defaults.
+- Manage online sources with JSON edit, enable/disable, delete, reset, and default selection.
 - A `Reader` tool window panel with the main actions.
 
 ## How to Open
@@ -30,6 +32,8 @@ JetBrains IDE reading plugin inspired by W-Reader, with a smaller core model and
 - `Reader-plugin-yip | 自动下一章 开/关`
 - `Reader-plugin-yip | 平台网页登录`
 - `Reader-plugin-yip | 网页正文提取`
+- `Reader-plugin-yip | 在线书源搜索`
+- `Reader-plugin-yip | 书源管理`
 
 Default shortcuts are declared in `src/main/resources/META-INF/plugin.xml`.
 

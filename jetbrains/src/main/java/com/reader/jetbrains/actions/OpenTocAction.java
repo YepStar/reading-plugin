@@ -49,6 +49,12 @@ public final class OpenTocAction extends AnAction {
             return;
         }
         state.jumpTo(index);
+        try {
+            RemoteChapterLoader.ensureLoaded(project, index);
+        } catch (Exception exception) {
+            Messages.showErrorDialog(project, "在线章节加载失败：\n" + exception.getMessage(), "Reader-plugin-yip");
+            return;
+        }
         Editor editor = ReaderActionUtil.editor(event, project);
         if (editor != null) {
             ReaderHintController.show(project, editor);
