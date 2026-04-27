@@ -6,7 +6,8 @@
     <idea-version since-build="242"/>
 
     <description><![CDATA[
-        <p>致敬摸鱼阅读插件先行者W-Reader，地址：https://plugins.jetbrains.com/plugin/25572-w-reader。该版本在保留其部分功能的同时，优化了自行上传文件与正则解析章节名拆分。以及网络搜索的书源管理。请用户自行负责访问内容来源合规，插件不内置或分发小说内容。</p>
+        <p>Reader Yip is a lightweight reading utility for JetBrains IDEs. It provides an editor-native reading hint for local TXT and EPUB files, configurable chapter splitting, table-of-contents navigation, persisted reading progress, web text extraction, platform browser import, and configurable online book sources.</p>
+        <p>This plugin is inspired by W-Reader and focuses on local user-controlled reading workflows. Users are responsible for ensuring that any websites, book sources, and content they access comply with applicable laws and platform terms. The plugin does not bundle, host, or distribute novel content.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
