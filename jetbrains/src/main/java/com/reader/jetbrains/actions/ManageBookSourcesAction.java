@@ -24,11 +24,10 @@ public final class ManageBookSourcesAction extends AnAction {
         BookSourceService service = project.getService(BookSourceService.class);
         while (true) {
             String[] operations = {"新增书源 JSON", "编辑当前书源 JSON", "启用/停用书源", "设为默认书源", "删除书源", "重置内置书源", "关闭"};
-            int operationIndex = Messages.showChooseDialog(
+            int operationIndex = ReaderDialogs.chooseIndex(
                     project,
-                    "选择书源管理操作：",
                     "书源管理",
-                    Messages.getQuestionIcon(),
+                    "选择书源管理操作：",
                     operations,
                     "编辑当前书源 JSON"
             );
@@ -105,7 +104,7 @@ public final class ManageBookSourcesAction extends AnAction {
 
     private static BookSource chooseSource(Project project, List<BookSource> sources, String title) {
         String[] labels = sources.stream().map(BookSource::toString).toArray(String[]::new);
-        int choice = Messages.showChooseDialog(project, title + "：", title, Messages.getQuestionIcon(), labels, labels.length == 0 ? "" : labels[0]);
+        int choice = ReaderDialogs.chooseIndex(project, title, title + "：", labels, labels.length == 0 ? "" : labels[0]);
         if (choice < 0) {
             return null;
         }

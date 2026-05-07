@@ -134,7 +134,7 @@ public final class SearchOnlineBookAction extends AnAction {
     private static BookSource chooseSource(Project project, BookSourceService service, List<BookSource> sources) {
         String[] names = sources.stream().map(BookSource::toString).toArray(String[]::new);
         String selected = service.selectedSource().toString();
-        int choice = Messages.showChooseDialog(project, "选择搜索书源：", "在线搜索", Messages.getQuestionIcon(), names, selected);
+        int choice = ReaderDialogs.chooseIndex(project, "在线搜索", "选择搜索书源：", names, selected);
         if (choice < 0) {
             return null;
         }

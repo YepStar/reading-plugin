@@ -25,13 +25,12 @@ public final class OpenPlatformBrowserAction extends AnAction {
                 "https://www.qidian.com/",
                 "https://weread.qq.com/"
         };
-        String selected = (String) Messages.showEditableChooseDialog(
-                "选择或输入要打开的平台页面。登录状态会由 WebStorm 内嵌浏览器保留。",
+        String selected = ReaderDialogs.editableChoice(
+                project,
                 "平台网页浮窗",
-                Messages.getQuestionIcon(),
+                "选择或输入要打开的平台页面。登录状态会由 WebStorm 内嵌浏览器保留。",
                 options,
-                lastUrl,
-                null
+                lastUrl
         );
         if (selected == null || selected.isBlank()) {
             return;
