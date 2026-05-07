@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.reader.jetbrains</id>
     <name>Reader Yip</name>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
     <vendor>Reader</vendor>
     <idea-version since-build="242"/>
 
@@ -9,6 +9,10 @@
         <p>Reader Yip is a lightweight reading utility for JetBrains IDEs. It provides an editor-native reading hint for local TXT and EPUB files, configurable chapter splitting, table-of-contents navigation, persisted reading progress, web text extraction, compact platform browser popups, and configurable online book sources.</p>
         <p>This plugin is inspired by W-Reader and focuses on local user-controlled reading workflows. Users are responsible for ensuring that any websites, book sources, and content they access comply with applicable laws and platform terms. The plugin does not bundle, host, or distribute novel content.</p>
     ]]></description>
+
+    <change-notes><![CDATA[
+        <p>清理了废弃的接口。</p>
+    ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
 
