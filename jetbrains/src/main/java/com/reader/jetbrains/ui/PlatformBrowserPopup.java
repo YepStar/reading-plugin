@@ -70,6 +70,8 @@ public final class PlatformBrowserPopup {
                 .setMovable(true)
                 .setResizable(true)
                 .setCancelOnClickOutside(false)
+                .setCancelOnWindowDeactivation(false)
+                .setCancelOnOtherWindowOpen(false)
                 .setRequestFocus(true)
                 .setCancelCallback(() -> {
                     rememberUrl(project, browser.getCefBrowser());
@@ -87,6 +89,9 @@ public final class PlatformBrowserPopup {
                 .setTitle("Reader Yip 网页浮窗")
                 .setMovable(true)
                 .setResizable(true)
+                .setCancelOnClickOutside(false)
+                .setCancelOnWindowDeactivation(false)
+                .setCancelOnOtherWindowOpen(false)
                 .setCancelCallback(() -> {
                     saveBounds(panel, settings);
                     return true;
