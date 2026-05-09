@@ -17,8 +17,9 @@ public final class OpenPlatformBrowserAction extends AnAction {
         if (project == null) {
             return;
         }
-        ReaderStateService state = project.getService(ReaderStateService.class);
-        String lastUrl = state.lastPlatformUrl();
+        ReaderSettingsService settings = ReaderSettingsService.getInstance();
+        settings.migrateLastPlatformUrl(project.getService(ReaderStateService.class).lastPlatformUrl());
+        String lastUrl = settings.lastPlatformUrl();
         String[] options = {
                 lastUrl,
                 "https://fanqienovel.com/",
@@ -40,8 +41,8 @@ public final class OpenPlatformBrowserAction extends AnAction {
             return;
         }
         String normalizedUrl = normalizeUrl(url);
-        state.setLastPlatformUrl(normalizedUrl);
-        if ("dialog".equals(ReaderSettingsService.getInstance().platformBrowserMode())) {
+        settings.setLastPlatformUrl(normalizedUrl);
+        if ("dialog".equals(settings.platformBrowserMode())) {
             new BrowserDialog(project, normalizedUrl).show();
         } else {
             PlatformBrowserPopup.show(project, normalizedUrl);

@@ -8,7 +8,6 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.reader.jetbrains.settings.ReaderSettingsService;
-import com.reader.jetbrains.state.ReaderStateService;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
@@ -50,7 +49,7 @@ public final class PlatformBrowserPopup {
                 if (targetUrl != null && !targetUrl.isBlank()) {
                     SwingUtilities.invokeLater(() -> {
                         browser.loadURL(targetUrl);
-                        project.getService(ReaderStateService.class).setLastPlatformUrl(targetUrl);
+                        ReaderSettingsService.getInstance().setLastPlatformUrl(targetUrl);
                     });
                 }
                 return true;
@@ -137,6 +136,6 @@ public final class PlatformBrowserPopup {
             return;
         }
         String url = browser.getURL();
-        project.getService(ReaderStateService.class).setLastPlatformUrl(url);
+        ReaderSettingsService.getInstance().setLastPlatformUrl(url);
     }
 }

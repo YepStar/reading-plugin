@@ -13,6 +13,8 @@ import java.awt.Point;
 @Service(Service.Level.APP)
 @State(name = "ReaderYipSettings", storages = @Storage("reader-yip-settings.xml"))
 public final class ReaderSettingsService implements PersistentStateComponent<ReaderSettingsService.StateData> {
+    private static final String DEFAULT_PLATFORM_URL = "https://fanqienovel.com/";
+
     public static final class StateData {
         public int hintWidth = 420;
         public int hintHeight = 260;
@@ -27,6 +29,7 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
         public int platformPopupY = -1;
         public int platformPopupWidth = 520;
         public int platformPopupHeight = 360;
+        public String lastPlatformUrl = "";
     }
 
     private StateData state = new StateData();
@@ -79,6 +82,24 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
 
     public synchronized String platformBrowserMode() {
         return "dialog".equals(state.platformBrowserMode) ? "dialog" : "popup";
+    }
+
+    public synchronized String lastPlatformUrl() {
+        return state.lastPlatformUrl == null || state.lastPlatformUrl.isBlank()
+                ? DEFAULT_PLATFORM_URL
+                : state.lastPlatformUrl;
+    }
+
+    public synchronized void setLastPlatformUrl(String url) {
+        if (url != null && !url.isBlank()) {
+            state.lastPlatformUrl = url;
+        }
+    }
+
+    public synchronized void migrateLastPlatformUrl(String url) {
+        if ((state.lastPlatformUrl == null || state.lastPlatformUrl.isBlank()) && url != null && !url.isBlank()) {
+            state.lastPlatformUrl = url;
+        }
     }
 
     public synchronized Dimension platformPopupSize() {

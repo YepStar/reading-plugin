@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefClient;
-import com.reader.jetbrains.state.ReaderStateService;
+import com.reader.jetbrains.settings.ReaderSettingsService;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
@@ -58,7 +58,7 @@ public final class BrowserDialog extends DialogWrapper {
                 if (targetUrl != null && !targetUrl.isBlank()) {
                     SwingUtilities.invokeLater(() -> {
                         browser.loadURL(targetUrl);
-                        project.getService(ReaderStateService.class).setLastPlatformUrl(targetUrl);
+                        ReaderSettingsService.getInstance().setLastPlatformUrl(targetUrl);
                     });
                 }
                 return true;
@@ -112,7 +112,7 @@ public final class BrowserDialog extends DialogWrapper {
             return;
         }
         String url = cefBrowser.getURL();
-        project.getService(ReaderStateService.class).setLastPlatformUrl(url);
+        ReaderSettingsService.getInstance().setLastPlatformUrl(url);
     }
 
 }
