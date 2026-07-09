@@ -14,12 +14,9 @@ import com.reader.jetbrains.state.ReaderStateService;
 import com.reader.jetbrains.ui.ReaderHintController;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.util.List;
 
 public final class OpenTocAction extends AnAction {
@@ -41,22 +38,13 @@ public final class OpenTocAction extends AnAction {
         list.ensureIndexIsVisible(state.chapterIndex());
         list.setBorder(JBUI.Borders.empty());
         JBScrollPane scrollPane = new JBScrollPane(list);
-        scrollPane.setPreferredSize(new Dimension(420, 520));
-        JButton locateButton = new JButton("定位当前章节");
-        locateButton.addActionListener(action -> locateCurrentChapter(state, list));
-
-        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        toolbar.add(locateButton);
-
-        JPanel panel = new JPanel(new BorderLayout(0, 8));
-        panel.add(toolbar, BorderLayout.NORTH);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setPreferredSize(new Dimension(420, 450));
 
         DialogBuilder builder = new DialogBuilder(project);
         builder.setTitle("目录");
-        builder.setCenterPanel(panel);
+        builder.setCenterPanel(scrollPane);
         builder.setOkActionEnabled(true);
-        SwingUtilities.invokeLater(() -> locateCurrentChapter(state, list));
+        SwingUtilities.invokeLater(() -> centerCurrentChapter(state, list, scrollPane));
         if (!builder.showAndGet()) {
             return;
         }
@@ -77,12 +65,21 @@ public final class OpenTocAction extends AnAction {
         }
     }
 
-    private static void locateCurrentChapter(ReaderStateService state, JBList<Chapter> list) {
+    private static void centerCurrentChapter(ReaderStateService state, JBList<Chapter> list, JBScrollPane scrollPane) {
         int currentIndex = state.chapterIndex();
         if (currentIndex < 0 || currentIndex >= list.getItemsCount()) {
             return;
         }
         list.setSelectedIndex(currentIndex);
-        list.ensureIndexIsVisible(currentIndex);
+        Rectangle cellBounds = list.getCellBounds(currentIndex, currentIndex);
+        if (cellBounds == null) {
+            list.ensureIndexIsVisible(currentIndex);
+            return;
+        }
+        int viewportHeight = scrollPane.getViewport().getExtentSize().height;
+        Rectangle target = new Rectangle(cellBounds);
+        target.y = Math.max(0, cellBounds.y - Math.max(0, viewportHeight - cellBounds.height) / 2);
+        target.height = Math.max(cellBounds.height, viewportHeight);
+        list.scrollRectToVisible(target);
     }
 }
