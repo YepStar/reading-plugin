@@ -5,8 +5,10 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
+import com.intellij.util.ui.JBUI;
 import com.reader.jetbrains.settings.ReaderSettingsService;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
@@ -30,6 +32,7 @@ public final class PlatformBrowserPopup {
     public static void show(Project project, String url) {
         JPanel panel = new JPanel(new BorderLayout());
         ReaderSettingsService settings = ReaderSettingsService.getInstance();
+        panel.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
         panel.setPreferredSize(settings.platformPopupSize());
 
         if (!JBCefApp.isSupported()) {
@@ -65,7 +68,6 @@ public final class PlatformBrowserPopup {
 
         JBPopup popup = JBPopupFactory.getInstance()
                 .createComponentPopupBuilder(panel, browser.getComponent())
-                .setTitle("Reader Yip 网页浮窗")
                 .setMovable(true)
                 .setResizable(true)
                 .setCancelOnClickOutside(false)
@@ -85,7 +87,6 @@ public final class PlatformBrowserPopup {
     private static JBPopup popup(JPanel panel, ReaderSettingsService settings) {
         return JBPopupFactory.getInstance()
                 .createComponentPopupBuilder(panel, panel)
-                .setTitle("Reader Yip 网页浮窗")
                 .setMovable(true)
                 .setResizable(true)
                 .setCancelOnClickOutside(false)
