@@ -14,7 +14,12 @@ import com.reader.jetbrains.state.ReaderStateService;
 import com.reader.jetbrains.ui.ReaderHintController;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.List;
 
 public final class OpenTocAction extends AnAction {
@@ -37,10 +42,21 @@ public final class OpenTocAction extends AnAction {
         list.setBorder(JBUI.Borders.empty());
         JBScrollPane scrollPane = new JBScrollPane(list);
         scrollPane.setPreferredSize(new Dimension(420, 520));
+        JButton locateButton = new JButton("定位当前章节");
+        locateButton.addActionListener(action -> locateCurrentChapter(state, list));
+
+        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        toolbar.add(locateButton);
+
+        JPanel panel = new JPanel(new BorderLayout(0, 8));
+        panel.add(toolbar, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
         DialogBuilder builder = new DialogBuilder(project);
         builder.setTitle("目录");
-        builder.setCenterPanel(scrollPane);
+        builder.setCenterPanel(panel);
         builder.setOkActionEnabled(true);
+        SwingUtilities.invokeLater(() -> locateCurrentChapter(state, list));
         if (!builder.showAndGet()) {
             return;
         }
@@ -59,5 +75,14 @@ public final class OpenTocAction extends AnAction {
         if (editor != null) {
             ReaderHintController.show(project, editor);
         }
+    }
+
+    private static void locateCurrentChapter(ReaderStateService state, JBList<Chapter> list) {
+        int currentIndex = state.chapterIndex();
+        if (currentIndex < 0 || currentIndex >= list.getItemsCount()) {
+            return;
+        }
+        list.setSelectedIndex(currentIndex);
+        list.ensureIndexIsVisible(currentIndex);
     }
 }
