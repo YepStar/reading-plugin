@@ -36,15 +36,28 @@ public final class SimpleJson {
             if (part.isBlank()) {
                 continue;
             }
-            boolean allItems = part.endsWith("[*]");
-            String key = allItems ? part.substring(0, part.length() - 3) : part;
+            int wildcard = part.indexOf("[*]");
+            String key = wildcard < 0 ? part : part.substring(0, wildcard);
             if (current instanceof Map<?, ?> map) {
                 current = map.get(key);
             } else {
                 return null;
             }
-            if (allItems && !(current instanceof List<?>)) {
-                return null;
+            while (wildcard >= 0) {
+                if (!(current instanceof List<?> list)) {
+                    return null;
+                }
+                int nextWildcard = part.indexOf("[*]", wildcard + 3);
+                if (nextWildcard >= 0) {
+                    List<Object> flattened = new ArrayList<>();
+                    for (Object item : list) {
+                        if (item instanceof List<?> nested) {
+                            flattened.addAll(nested);
+                        }
+                    }
+                    current = flattened;
+                }
+                wildcard = nextWildcard;
             }
         }
         return current;

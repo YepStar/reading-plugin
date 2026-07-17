@@ -1,0 +1,38 @@
+{
+  "id": "fanqie-oiapi",
+  "name": "番茄小说（OIAPI）",
+  "type": "json",
+  "baseUrl": "https://oiapi.net/",
+  "enabled": true,
+  "search": {
+    "url": "https://oiapi.net/api/FqRead?method=search&keyword=${key}&page=${page}&key=${apiKey}&type=json",
+    "dataPath": "$.data[*]",
+    "listSelector": "",
+    "titleSelector": "",
+    "urlSelector": ""
+  },
+  "catalog": {
+    "url": "https://oiapi.net/api/FqRead?method=chapters&id=${bookId}&key=${apiKey}&type=json",
+    "dataPath": "$.data[*][*]",
+    "listSelector": "",
+    "titleSelector": "",
+    "urlSelector": "",
+    "itemIdField": "index",
+    "itemTitleField": "title",
+    "itemUrlField": ""
+  },
+  "content": {
+    "url": "https://oiapi.net/api/FqRead?method=chapter&id=${bookId}&chapter=${itemId}&key=${apiKey}&type=json",
+    "dataPath": "$.message",
+    "selector": ""
+  },
+  "info": {
+    "bookIdField": "id",
+    "titleField": "title",
+    "authorField": "author",
+    "descField": "docs",
+    "urlField": "",
+    "coverField": "thumb"
+  },
+  "processor": {}
+}

@@ -1,6 +1,7 @@
 package com.reader.jetbrains.sources;
 
 import com.reader.jetbrains.sources.json.SimpleJson;
+import com.reader.jetbrains.settings.ReaderSettingsService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -149,6 +150,13 @@ public final class BookSourceClient {
 
     private static String render(String template, BookSource source, String keyword, SearchResult result, RemoteChapter chapter) {
         String rendered = template == null ? "" : template;
+        if (rendered.contains("${apiKey}")) {
+            String apiKey = ReaderSettingsService.getInstance().fanqieApiKey();
+            if (apiKey.isBlank()) {
+                throw new IllegalStateException("未配置番茄 OIAPI Key，请在 设置 > 工具 > Reader Yip 中输入并应用。");
+            }
+            rendered = rendered.replace("${apiKey}", encode(apiKey));
+        }
         rendered = rendered.replace("${key}", encode(keyword == null ? "" : keyword));
         rendered = rendered.replace("${page}", "1");
         rendered = rendered.replace("${bookId}", encode(result == null ? "" : result.bookId));

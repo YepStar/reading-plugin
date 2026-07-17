@@ -27,6 +27,7 @@
 - `${bookUrl}`：搜索结果解析出的书籍页面 URL。
 - `${itemId}`：目录章节解析出的章节 ID。
 - `${chapterUrl}`：目录章节解析出的章节页面 URL。
+- `${apiKey}`：从 WebStorm 的 `设置 > 工具 > Reader Yip` 读取番茄 OIAPI Key，并由 Password Safe 在本机跨项目保存。
 
 ## JSON 书源
 
@@ -50,6 +51,8 @@ JSON 书源使用 `dataPath` 取数据：
 如果字段不能直接使用，可以通过 `processor` 提取。
 
 目录数组既可以是对象数组，也可以是字符串数组。
+
+多层数组可以连续使用 `[*]` 展平，例如 `$.data[*][*]` 可将按卷分组的章节列表展平为单一目录。
 
 对象数组示例：
 
@@ -123,4 +126,5 @@ HTML 书源使用简化选择器：
 
 - 配置文件必须是标准 JSON，不能在 JSON 内写注释。
 - 当前插件不执行远程脚本，也不执行任意 JavaScript processor。
+- 番茄 OIAPI Key 不应直接写入书源 JSON；请使用 `${apiKey}` 占位符并在 Reader Yip 设置中输入。
 - 依赖加密、签名、多页拼接或复杂 DOM 处理的站点，需要在插件代码中增加专门 processor。

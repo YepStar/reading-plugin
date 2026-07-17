@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.reader.jetbrains</id>
     <name>Reader Yip</name>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <vendor>Reader</vendor>
     <idea-version since-build="242"/>
 
@@ -11,7 +11,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>清理了废弃的接口。</p>
+        <ul>
+            <li>新增番茄小说（OIAPI）内置书源。</li>
+            <li>番茄 API Key 改为在 Reader Yip 设置中手动输入，并通过 WebStorm Password Safe 在本机跨项目保存。</li>
+            <li>移除书源配置中的内置密钥，避免敏感信息进入项目文件或插件包。</li>
+            <li>新增多层 JSON 数组目录解析，支持按卷返回的番茄章节列表。</li>
+        </ul>
     ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.util.Objects;
@@ -24,6 +25,7 @@ public final class ReaderSettingsConfigurable implements Configurable {
     private JSpinner maxLineChars;
     private JComboBox<String> defaultCharset;
     private JSpinner autoNextSeconds;
+    private JPasswordField fanqieApiKey;
     private JBCheckBox compactPlatformBrowser;
     private JPanel panel;
 
@@ -44,6 +46,7 @@ public final class ReaderSettingsConfigurable implements Configurable {
         defaultCharset = new JComboBox<>(new String[]{"UTF-8", "GBK", "GB18030", "Big5"});
         defaultCharset.setSelectedItem(state.defaultCharset == null || state.defaultCharset.isBlank() ? "UTF-8" : state.defaultCharset);
         autoNextSeconds = new JSpinner(new SpinnerNumberModel(state.autoNextSeconds, 5, 3600, 5));
+        fanqieApiKey = new JPasswordField(ReaderSettingsService.getInstance().fanqieApiKey(), 32);
         compactPlatformBrowser = new JBCheckBox("使用紧凑网页浮窗");
         compactPlatformBrowser.setSelected(!"dialog".equals(state.platformBrowserMode));
 
@@ -56,6 +59,8 @@ public final class ReaderSettingsConfigurable implements Configurable {
                 .addLabeledComponent("单行最大字数（0 为不限制）", maxLineChars)
                 .addLabeledComponent("默认 TXT 编码", defaultCharset)
                 .addLabeledComponent("自动下一章间隔（秒）", autoNextSeconds)
+                .addLabeledComponent("番茄 OIAPI Key", fanqieApiKey)
+                .addComponent(new JBLabel("API Key 由 WebStorm Password Safe 保存在本机，所有项目共用，不会写入书源 JSON。"))
                 .addComponent(compactPlatformBrowser)
                 .addComponent(new JBLabel("平台网页不再支持一键导入原生提示层。可用紧凑浮窗降低可见面积，阅读正文建议使用网页正文提取或在线书源。"))
                 .addComponentFillVertically(new JPanel(), 0)
@@ -74,6 +79,7 @@ public final class ReaderSettingsConfigurable implements Configurable {
                 || intValue(maxLineChars) != state.maxLineChars
                 || !Objects.equals(defaultCharset.getSelectedItem(), state.defaultCharset)
                 || intValue(autoNextSeconds) != state.autoNextSeconds
+                || !passwordValue(fanqieApiKey).equals(ReaderSettingsService.getInstance().fanqieApiKey())
                 || compactPlatformBrowser.isSelected() != !"dialog".equals(state.platformBrowserMode);
     }
 
@@ -88,6 +94,7 @@ public final class ReaderSettingsConfigurable implements Configurable {
         state.maxLineChars = intValue(maxLineChars);
         state.defaultCharset = String.valueOf(defaultCharset.getSelectedItem());
         state.autoNextSeconds = intValue(autoNextSeconds);
+        ReaderSettingsService.getInstance().setFanqieApiKey(passwordValue(fanqieApiKey));
         state.platformBrowserMode = compactPlatformBrowser.isSelected() ? "popup" : "dialog";
     }
 
@@ -102,6 +109,7 @@ public final class ReaderSettingsConfigurable implements Configurable {
         maxLineChars.setValue(state.maxLineChars);
         defaultCharset.setSelectedItem(state.defaultCharset);
         autoNextSeconds.setValue(state.autoNextSeconds);
+        fanqieApiKey.setText(ReaderSettingsService.getInstance().fanqieApiKey());
         compactPlatformBrowser.setSelected(!"dialog".equals(state.platformBrowserMode));
     }
 
@@ -112,5 +120,9 @@ public final class ReaderSettingsConfigurable implements Configurable {
 
     private static int intValue(JSpinner spinner) {
         return ((Number) spinner.getValue()).intValue();
+    }
+
+    private static String passwordValue(JPasswordField field) {
+        return new String(field.getPassword()).trim();
     }
 }

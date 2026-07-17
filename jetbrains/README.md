@@ -49,7 +49,7 @@ Default shortcuts are declared in `src/main/resources/META-INF/plugin.xml`.
 The package script creates:
 
 ```bash
-jetbrains/build/distributions/reader-jetbrains-0.1.0.zip
+jetbrains/build/distributions/reader-jetbrains-0.1.3.zip
 ```
 
 ## Publish

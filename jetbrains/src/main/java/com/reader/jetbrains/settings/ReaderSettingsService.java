@@ -1,5 +1,7 @@
 package com.reader.jetbrains.settings;
 
+import com.intellij.credentialStore.CredentialAttributes;
+import com.intellij.ide.passwordSafe.PasswordSafe;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
@@ -14,6 +16,7 @@ import java.awt.Point;
 @State(name = "ReaderYipSettings", storages = @Storage("reader-yip-settings.xml"))
 public final class ReaderSettingsService implements PersistentStateComponent<ReaderSettingsService.StateData> {
     private static final String DEFAULT_PLATFORM_URL = "https://fanqienovel.com/";
+    private static final CredentialAttributes FANQIE_API_KEY = new CredentialAttributes("Reader Yip: Fanqie OIAPI Key");
 
     public static final class StateData {
         public int hintWidth = 420;
@@ -78,6 +81,16 @@ public final class ReaderSettingsService implements PersistentStateComponent<Rea
 
     public synchronized int autoNextSeconds() {
         return clamp(state.autoNextSeconds, 5, 3600);
+    }
+
+    public String fanqieApiKey() {
+        String value = PasswordSafe.getInstance().getPassword(FANQIE_API_KEY);
+        return value == null ? "" : value.trim();
+    }
+
+    public void setFanqieApiKey(String value) {
+        String key = value == null ? "" : value.trim();
+        PasswordSafe.getInstance().setPassword(FANQIE_API_KEY, key.isBlank() ? null : key);
     }
 
     public synchronized String platformBrowserMode() {
